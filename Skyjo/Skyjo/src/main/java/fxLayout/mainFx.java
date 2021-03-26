@@ -36,11 +36,13 @@ public class mainFx implements viewInterface {
         GridPane gpR = createPane(10, 5, 5);
 
         //vbox
-        
+        TextField insruction = new TextField("Instruction");
+        insruction.setAlignment(Pos.CENTER);
+
         
         //gridpane left
         gpL.add(playerTextField("blue", 1, game), 0, 0, 4, 1);
-        //createCardsForPlayers(game, gpL, gpR, 1);
+        createCardsForPlayers(game, gpL, gpR, 1);
 
         //Gridpane mid
         TextField textField = new TextField();
@@ -52,6 +54,7 @@ public class mainFx implements viewInterface {
         gpR.add(playerTextField("blue", 2, game), 0, 0, 4, 1);
 
         //Adding of elements
+        vbox.getChildren().addAll(hbox);
         hbox.getChildren().addAll(gpL, gpM, gpR);
 
         //End
@@ -80,8 +83,10 @@ public class mainFx implements viewInterface {
         for (int row = 1, col = 0, index = 0; row <= 3; col++, index++) {
             Button cardP1 = new Button();
             Button cardP2 = new Button();
+            cardP1.setPrefWidth(200);
+            cardP1.setPrefHeight(300);
             backFaceCard(cardP1);
-            backFaceCard(cardP2);
+//            backFaceCard(cardP2);
             eventOfCard(game, cardP1, player, index);
             gpLeft.add(cardP1, col, row);
             eventOfCard(game, cardP2, player, index);
@@ -98,14 +103,14 @@ public class mainFx implements viewInterface {
      * @param btn Button from which to create back face.
      */
     private void backFaceCard(Button btn) {
-        Image carte = new Image("nicubunu_Card_backs_grid_blue.svg");
-        ImageView cartes = new ImageView(carte);
-        cartes.setFitHeight(100);
-        cartes.setFitWidth(50);
-        btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        btn.setGraphic(cartes);
-        btn.setStyle("-fx-pref-height: 75px;");
-        btn.setStyle("-fx-background-color: transparent;");
+        Image carte = new Image("/carte.png");
+        ImageView cartesIV = new ImageView(carte);
+        cartesIV.setFitHeight(100);
+        cartesIV.setFitWidth(50);
+//        btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        btn.setGraphic(cartesIV);
+//        btn.setStyle("-fx-pref-height: 75px;");
+//        btn.setStyle("-fx-background-color: transparent;");
     }
 
     /**
