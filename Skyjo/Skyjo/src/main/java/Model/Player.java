@@ -1,13 +1,15 @@
 package Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Represents a player. Each player has a hand of card and a number of points 
+ * from each visible card.
  * @author Gregory
  */
 public class Player {
-    private List <Card> PlayerCards;
+    private ArrayList <Card> playerCards;
     private int nbOFPointsVisCards;
     
     /**
@@ -15,6 +17,7 @@ public class Player {
      */
     public Player (){
         this.nbOFPointsVisCards = 0;
+        playerCards = new ArrayList();
     }
     
     /**
@@ -30,7 +33,8 @@ public class Player {
      * @param card Card to add to total.
      */
     public void addPoints (Card card){
-        this.nbOFPointsVisCards+=card.getValue();
+        if (card.getVisibiltiy())
+            this.nbOFPointsVisCards+=card.getValue();
     }
     
     /**
@@ -38,7 +42,16 @@ public class Player {
      * @return List of player's cards.
      */
     public List<Card> getPlayerCard (){
-        return this.PlayerCards;
+        return this.playerCards;
+    }
+    
+    /**
+     * Gets player card at Index.
+     * @param index Index to get card from.
+     * @return Card at index in player hand.
+     */
+    public Card getPlayerCardAtIndex (int index){
+        return this.playerCards.get(index);
     }
     
     /**
@@ -48,7 +61,29 @@ public class Player {
     public void addCard(Card card){
         if (card == null)
             throw new IllegalArgumentException("Card cannot be null");
-        this.PlayerCards.add(card);
+        this.playerCards.add(card);
+    }
+    
+    /**
+     * Makes two card randomly visible at begin of game.
+     */
+    public void showRandomCardStart(){
+        int first = (int) (Math.random() * ((11 - 0) + 1) + 0);
+        int second = (int) (Math.random() * ((11 - 0) + 1) + 0);
+        while (first==second)
+            second = (int) (Math.random() * ((11 - 0) + 1) + 0);
+        playerCards.get(first).setVisibility(true);
+        addPoints(playerCards.get(first));
+        playerCards.get(second).setVisibility(true);
+        addPoints(playerCards.get(second));
+    }
+    
+    /**
+     * Prints the hand of current player in console.
+     */
+    public void printHand(){
+        playerCards.forEach((t) -> {System.out.println(t);
+        });
     }
     
     

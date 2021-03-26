@@ -1,23 +1,37 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controller;
 
 import Model.Model;
-import fxLayout.mainFx;
-import javafx.application.Application;
+import fxLayout.viewInterface;
+import javafx.stage.Stage;
 
 /**
- *
+ * Controller for the game.
  * @author Gregory
  */
 public class Controller {
     
-    private Model game;
+    private final Model game;
+    private final viewInterface view;
     
-    public void start(String[] args) {
-        Application.launch(mainFx.class, args);
+    /**
+     * Constructor for controller.
+     * @param view View to display game.
+     * @param game Model to control game.
+     */
+    public Controller(viewInterface view, Model game) {
+        this.view = view;
+        this.game = game;
+    }
+
+    /**
+     * Starts a new game
+     * @param stage Stage to display in fx.
+     */
+    public void start(Stage stage) {
+        game.shuffleDeck();
+        game.distribInit();
+        for (int i = 1; i<=2; i++)
+            game.getPlayers()[i].showRandomCardStart();
+        view.start(stage, game);
     }
 }

@@ -1,7 +1,7 @@
 package Model;
 
 /**
- *
+ * Represents a card with a value and wether or not it is visible on game.
  * @author Gregory
  */
 public class Card {
@@ -31,6 +31,22 @@ public class Card {
      */
     public void setVisibility(boolean vis){
         this.visible = vis;
+    }
+    
+    /**
+     * Gets the visibility of a card.
+     * @return Visibility of card.
+     */
+    public boolean getVisibiltiy(){
+        return this.visible;
+    }
+    
+    /**
+     * @{inheritDoc} 
+     */
+    @Override
+    public String toString (){
+        return Integer.toString(getValue()) + getVisibiltiy();
     }
     
 }
