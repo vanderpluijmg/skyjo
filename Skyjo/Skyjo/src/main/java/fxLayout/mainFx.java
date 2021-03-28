@@ -45,7 +45,7 @@ public class mainFx implements viewInterface {
         //Gridpane mid
         gpM.add(formatTitles(""), 0, 0, 1, 1);
         gpM.add(formatTitles("Pioche"), 1, 1, 1, 1);
-        gpM.add(formatTitles("Poubelle"), 1, 3, 1, 1);
+        gpM.add(formatTitles("Défausse"), 1, 3, 1, 1);
         Button trashPack = createTrashPack(game);
         gpM.add(createDrawPack(game, trashPack), 1, 2);
         gpM.add(trashPack, 1, 5);
