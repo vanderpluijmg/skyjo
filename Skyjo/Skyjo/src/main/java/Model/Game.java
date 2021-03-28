@@ -2,6 +2,7 @@ package Model;
 
 /**
  * Represents all useful functions to play a game.
+ *
  * @author Gregory
  */
 public class Game implements Model {
@@ -87,5 +88,14 @@ public class Game implements Model {
     @Override
     public void printDeck() {
         deck.print();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFirstToPlay() {
+        return players[1].getNbOFPointsVisCards()
+                > players[2].getNbOFPointsVisCards() ? "1" : "2";
     }
 }

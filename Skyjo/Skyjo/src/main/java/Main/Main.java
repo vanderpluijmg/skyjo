@@ -9,12 +9,14 @@ import javafx.stage.Stage;
 
 /**
  * Main class of Skyjo.
+ *
  * @author Gregory
  */
-public class Main extends Application{
-    
+public class Main extends Application {
+
     /**
      * Main function of main class. Launches fx.
+     *
      * @param args Arguments to launch fx.
      */
     public static void main(String[] args) {
@@ -22,7 +24,7 @@ public class Main extends Application{
     }
 
     /**
-     *{@inheritDoc} 
+     * {@inheritDoc}
      */
     @Override
     public void start(Stage stage) throws Exception {
