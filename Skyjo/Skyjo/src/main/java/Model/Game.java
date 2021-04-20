@@ -1,12 +1,17 @@
 package Model;
 
+import Obs.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents all useful functions to play a game.
  *
  * @author Gregory
  */
-public class Game implements Model {
+public class Game implements Observable, Model{
 
+    private List<Observer> observers;
     private final Deck deck;
     private final Player[] players;
 
@@ -14,6 +19,7 @@ public class Game implements Model {
      * Default constructor for game.
      */
     public Game() {
+        observers = new ArrayList<>();
         this.deck = new Deck();
         this.players = new Player[3];
         this.players[1] = new Player();
@@ -97,5 +103,15 @@ public class Game implements Model {
     public String getFirstToPlay() {
         return players[1].getNbOFPointsVisCards()
                 > players[2].getNbOFPointsVisCards() ? "1" : "2";
+    }
+
+    @Override
+    public void notifyObserver(Object arg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void registerObserver(Observer obs) {
+        observers.add(obs);
     }
 }
