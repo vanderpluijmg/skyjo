@@ -6,5 +6,9 @@ package Model;
  */
 public enum gameState {
     START,
-    CLICKED,
+    TAKECARD,
+    KEEPTHROW,
+    CHANGEWITHCARD,
+    GIVEXCHANGEDCARD,
+    SHOWCARD
 }

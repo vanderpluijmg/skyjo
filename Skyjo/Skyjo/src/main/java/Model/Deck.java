@@ -66,7 +66,7 @@ public class Deck {
     public Card hitDeck(boolean show) {
         Card card = this.deck.remove(deck.size() - 1);
         if (show == true) {
-            card.setVisibility(true);
+            card.hasVisibility(true);
         }
         return card;
     }

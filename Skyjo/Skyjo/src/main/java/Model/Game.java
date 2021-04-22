@@ -1,19 +1,22 @@
 package Model;
 
-import Obs.*;
+import fxLayout.viewInterface;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents all useful functions to play a game.
  *
  * @author Gregory
  */
-public class Game implements Observable, Model{
+public class Game implements Model{
 
-    private List<Observer> observers;
+    private final List<viewInterface> observers;
     private final Deck deck;
     private final Player[] players;
+    private Player currentPlayer;
+    private gameState status;
 
     /**
      * Default constructor for game.
@@ -24,6 +27,24 @@ public class Game implements Observable, Model{
         this.players = new Player[3];
         this.players[1] = new Player();
         this.players[2] = new Player();
+        Player currentPlayer = getFirstToPlay();
+        status = gameState.START;
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public gameState getStatus() {
+        return status;
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public void setStatus(gameState status) {
+        this.status = status;
     }
 
     /**
@@ -57,7 +78,7 @@ public class Game implements Observable, Model{
      * {@inheritDoc}
      */
     public void showCard(Card card) {
-        card.setVisibility(true);
+        card.hasVisibility(true);
     }
 
     /**
@@ -84,7 +105,6 @@ public class Game implements Observable, Model{
             } catch (Exception e) {
                 throw new IllegalArgumentException("Deck is empty");
             }
-
         }
     }
 
@@ -96,22 +116,62 @@ public class Game implements Observable, Model{
         deck.print();
     }
 
+    
     /**
-     * {@inheritDoc}
+     * Gets the player that is allowed to start the game.
+     *
+     * @return Player that need to play first.
+     */
+    private Player getFirstToPlay() {
+        return players[1].getNbOFPointsVisCards()
+                > players[2].getNbOFPointsVisCards() ? players[1] : players[2];
+    }
+    
+    /**
+     *{@inheritDoc}
      */
     @Override
-    public String getFirstToPlay() {
-        return players[1].getNbOFPointsVisCards()
-                > players[2].getNbOFPointsVisCards() ? "1" : "2";
+    public Player nextToPlay() {
+        if (players[2].equals(this.currentPlayer)) {
+            this.currentPlayer = players[1];
+            return players[1];
+        }
+        this.currentPlayer = players[2];
+        return players[2];
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
-    public void notifyObserver(Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void registerObserver(Observer obs) {
+    public void registerObs(viewInterface obs) {
+        Objects.requireNonNull(obs);
         observers.add(obs);
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public void notifyObs(Object arg) {
+        Objects.requireNonNull(arg);
+        observers.forEach(x -> {x.update(arg);});
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public void addUtils() { 
+        notifyObs(new Utils(this.deck, this.players)); 
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public int getPlayingPlayer() {
+       return players[2].equals(this.currentPlayer)
+                ? 2 : 1;
     }
 }

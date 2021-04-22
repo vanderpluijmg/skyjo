@@ -1,7 +1,10 @@
 package fxLayout;
 
+import Controller.Controller;
 import Model.Card;
+import Model.Game;
 import Model.Model;
+import Model.Utils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,14 +23,18 @@ import javafx.stage.Stage;
  *
  * @author Gregory
  */
-public class mainFx implements viewInterface {
-
-    @Override
+public class mainFx implements viewInterface{
+    
     /**
      * {@inheritDoc}
      */
-    public void start(Stage stage, Model game) {
-
+    @Override
+    public void start(Stage stage) {
+        Game game = new Game();
+        Controller controller = new Controller(this, game);
+        controller.addObs();
+        controller.start();
+        
         //setup
         stage.setTitle("Skyoj");
         VBox vbox = new VBox();
@@ -132,10 +139,10 @@ public class mainFx implements viewInterface {
             Button cardP2 = new Button();
             backFaceCard(cardP1);
             backFaceCard(cardP2);
-            if (game.getPlayers()[1].getPlayerCardAtIndex(index).getVisibiltiy()) {
+            if (game.getPlayers()[1].getPlayerCardAtIndex(index).isVisibiltiy()) {
                 cardP1.setGraphic(findValue(game.getPlayers()[1].getPlayerCardAtIndex(index), cardP1));
             }
-            if (game.getPlayers()[2].getPlayerCardAtIndex(index).getVisibiltiy()) {
+            if (game.getPlayers()[2].getPlayerCardAtIndex(index).isVisibiltiy()) {
                 cardP2.setGraphic(findValue(game.getPlayers()[2].getPlayerCardAtIndex(index), cardP2));
             }
             //eventOfCard(game, cardP1, 1, index);
@@ -249,5 +256,10 @@ public class mainFx implements viewInterface {
         tf.setEditable(false);
         tf.setStyle("-fx-background-color: transparent;");
         return tf;
+    }
+
+    @Override
+    public void update(Object arg) {
+        Utils a = (Utils)arg;
     }
 }

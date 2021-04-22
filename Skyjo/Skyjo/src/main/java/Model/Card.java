@@ -34,7 +34,7 @@ public class Card {
      *
      * @param vis Visibility to set.
      */
-    public void setVisibility(boolean vis) {
+    public void hasVisibility(boolean vis) {
         this.visible = vis;
     }
 
@@ -43,7 +43,7 @@ public class Card {
      *
      * @return Visibility of card.
      */
-    public boolean getVisibiltiy() {
+    public boolean isVisibiltiy() {
         return this.visible;
     }
 
@@ -52,7 +52,7 @@ public class Card {
      */
     @Override
     public String toString() {
-        return Integer.toString(getValue()) + getVisibiltiy();
+        return Integer.toString(getValue()) + isVisibiltiy();
     }
 
 }

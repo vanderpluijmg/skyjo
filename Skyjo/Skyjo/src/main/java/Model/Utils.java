@@ -3,12 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Obs;
+package Model;
 
 /**
  *
  * @author Gregory
  */
-public class Observer {
+public class Utils {
     
+    private final Deck deck;
+    private Player[] players;
+    
+    public Utils (Deck deck, Player[] players){
+        this.deck = deck;
+        this.players = players;
+    }
 }

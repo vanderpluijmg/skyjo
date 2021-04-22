@@ -37,7 +37,7 @@ public class Player {
      * @param card Card to add to total.
      */
     public void addPoints(Card card) {
-        if (card.getVisibiltiy()) {
+        if (card.isVisibiltiy()) {
             this.nbOFPointsVisCards += card.getValue();
         }
     }
@@ -82,9 +82,9 @@ public class Player {
         while (first == second) {
             second = (int) (Math.random() * ((11 - 0) + 1) + 0);
         }
-        playerCards.get(first).setVisibility(true);
+        playerCards.get(first).hasVisibility(true);
         addPoints(playerCards.get(first));
-        playerCards.get(second).setVisibility(true);
+        playerCards.get(second).hasVisibility(true);
         addPoints(playerCards.get(second));
     }
 

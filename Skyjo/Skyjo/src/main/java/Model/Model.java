@@ -1,5 +1,7 @@
 package Model;
 
+import fxLayout.viewInterface;
+
 /**
  * Interface of a game.
  *
@@ -47,7 +49,30 @@ public interface Model {
     /**
      * Gets the player that is allowed to start the game.
      *
-     * @return Format in numerical of player allowed to start.
+     * @return Player that need to play first.
      */
-    public String getFirstToPlay();
+    public Player getFirstToPlay();
+    
+    /**
+     * Registers a new observer.
+     * @param obs Observer to add.
+     */
+    public void registerObs(viewInterface obs);
+    
+    /**
+     * Notifies all observers of new update.
+     * @param arg Update to notify.
+     */
+    public void notifyObs(Object arg);
+    
+    /**
+     * Adds the necessary utils to obs update.
+     */
+    public void addUtils();
+    
+    /**
+     * Player that is suppose to play after current player.
+     * @return Next player to play.
+     */
+    public Player nextToPlay();
 }
