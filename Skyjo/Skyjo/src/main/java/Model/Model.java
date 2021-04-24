@@ -46,12 +46,6 @@ public interface Model {
      */
     public void shuffleDeck();
 
-    /**
-     * Gets the player that is allowed to start the game.
-     *
-     * @return Player that need to play first.
-     */
-    public Player getFirstToPlay();
     
     /**
      * Registers a new observer.
@@ -75,4 +69,52 @@ public interface Model {
      * @return Next player to play.
      */
     public Player nextToPlay();
+    
+    /**
+     * Gets the player that is currently playing.
+     * @return The current playing player.
+     */
+    public int getPlayingPlayer();
+    
+    /**
+     * Sets the current game status.
+     * @param status Game status to set.
+     */
+    public void setStatus(gameState status);
+    
+    /**
+     * Gets the current game status.
+     * @return Current game status.
+     */
+    public gameState getStatus();
+    
+    /**
+     * Sets if the trash pack has been clicked or not.
+     * @param trashPackClicked True if trash pack has been clicked.
+     */
+    public void setTrashPackClicked(boolean trashPackClicked);
+    
+    /**
+     * Checks if the trash pack has been clicked.
+     * @return True if it has been clicked.
+     */        
+    public boolean isTrashPackClicked();
+      
+    /**
+     * Sets if the draw pack has been clicked or not.
+     * @param drawPackClicked True if draw pack has been clicked.
+     */
+    public void setDrawPackClicked(boolean drawPackClicked);
+    
+    /**
+     * Checks if the draw pack has been clicked.
+     * @return True if draw pack has been clicked.
+     */
+    public boolean isDrawPackClicked();
+    
+    /**
+     * Gets the deck of the current game.
+     * @return Deck of current game.
+     */
+    public Deck getDeck();
 }

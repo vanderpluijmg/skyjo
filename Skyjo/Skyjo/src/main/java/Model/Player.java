@@ -13,13 +13,23 @@ public class Player {
 
     private ArrayList<Card> playerCards;
     private int nbOFPointsVisCards;
+    private int nbOfVisCards;
 
     /**
      * Default constructor of Player
      */
     public Player() {
+        this.nbOfVisCards = 0;
         this.nbOFPointsVisCards = 0;
-        playerCards = new ArrayList();
+        this.playerCards = new ArrayList();
+    }
+
+    /**
+     * Returns the number of visible cards.
+     * @return Number of visible cards of player.
+     */
+    public int getNbOfVisCards() {
+        return nbOfVisCards;
     }
 
     /**
@@ -39,6 +49,7 @@ public class Player {
     public void addPoints(Card card) {
         if (card.isVisibiltiy()) {
             this.nbOFPointsVisCards += card.getValue();
+            this.nbOfVisCards++;
         }
     }
 

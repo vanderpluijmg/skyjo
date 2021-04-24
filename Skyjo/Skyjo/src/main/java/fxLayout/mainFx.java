@@ -3,8 +3,10 @@ package fxLayout;
 import Controller.Controller;
 import Model.Card;
 import Model.Game;
-import Model.Model;
+import Model.Player;
 import Model.Utils;
+import Model.gameState;
+import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -25,44 +27,46 @@ import javafx.stage.Stage;
  */
 public class mainFx implements viewInterface{
     
+    private Button drawButton;
+    private Button trashButton;
+    private final Controller controller = new Controller(this, new Game());
+    private final GridPane gpL = createPane(10, 5, 5);
+    private final GridPane gpM = createPane(10, 5, 5);
+    private final GridPane gpR = createPane(10, 5, 5);
+    
+    
     /**
      * {@inheritDoc}
      */
     @Override
     public void start(Stage stage) {
-        Game game = new Game();
-        Controller controller = new Controller(this, game);
+       
         controller.addObs();
         controller.start();
-        
+        drawButton = createDrawPack();
+        trashButton = createTrashPack();
+
         //setup
         stage.setTitle("Skyoj");
         VBox vbox = new VBox();
         HBox hbox = new HBox();
-        GridPane gpL = createPane(10, 5, 5);
-        GridPane gpM = createPane(10, 5, 5);
-        GridPane gpR = createPane(10, 5, 5);
-
-        //Cards for both players
-        createCardsForPlayers(game, gpL, gpR);
 
         //gridpane left
-        gpL.add(playerTextField(1, game), 0, 0, 4, 1);
+        //gpL.add(playerTextField(1, game), 0, 0, 4, 1);
 
         //Gridpane mid
         gpM.add(formatTitles(""), 0, 0, 1, 1);
         gpM.add(formatTitles("Pioche"), 1, 1, 1, 1);
         gpM.add(formatTitles("Défausse"), 1, 3, 1, 1);
-        Button trashPack = createTrashPack(game);
-        gpM.add(createDrawPack(game, trashPack), 1, 2);
-        gpM.add(trashPack, 1, 5);
+        gpM.add(drawButton, 1, 2);
+        gpM.add(trashButton, 1, 5);
 
         //Gridpane right
-        gpR.add(playerTextField(2, game), 0, 0, 4, 1);
+        //gpR.add(playerTextField(2, game), 0, 0, 4, 1);
 
         //Adding of elements
         vbox.getChildren().addAll(hbox, formatTitles("Player "
-                + game.getFirstToPlay() + " is allowed to start!"));
+                 + " is allowed to start!"));
         hbox.getChildren().addAll(gpL, gpM, gpR);
 
         //End
@@ -88,12 +92,16 @@ public class mainFx implements viewInterface{
     /**
      * Creates the draw pack for players to be able to draw a new card.
      */
-    private Button createDrawPack(Model game, Button tp) {
+    private Button createDrawPack() {
         Button button = new Button();
         backFaceCard(button);
         button.setPrefHeight(125);
         button.setPrefWidth(65);
-        //drawPackClickable(button, tp, game);
+        backFaceCard(button);
+        button.setOnAction((var t) -> {
+            button.setGraphic(findValue(controller.hitDeck(),button));
+            controller.clickDrawPack();
+        });
         return button;
     }
 
@@ -102,52 +110,48 @@ public class mainFx implements viewInterface{
      *
      * @return Formatted button.
      */
-    private Button createTrashPack(Model game) {
+    private Button createTrashPack() {
         Button trashPack = new Button();
         trashPack.setPrefHeight(125);
         trashPack.setPrefWidth(65);
-        Card card = game.piocheCarte();
-        trashPack.setGraphic(findValue(card, trashPack));
+        trashPack.setGraphic(findValue(controller.hitDeck(), trashPack));
         trashPack.setStyle("-fx-background-color: transparent;");
+        trashPack.setOnAction((var t) -> {
+//            if (controller.getTrashPack()){
+//                trashButton.setGraphic(drawButton.getGraphic());
+//                    playerCard.setGraphic
+//                    (findValue(player == 1 ? controller.getCardAtIndex(index, 1)
+//                    : controller.getCardAtIndex(index, 2), playerCard));
+//            }
+            controller.clickTrashPack();
+            controller.changeGameState(gameState.ECHANGEdEFAUSSEgRILLE);
+        });
         return trashPack;
     }
 
     /**
-     * Makes the draw pack clickable.
-     *
-     * @param btn Button to give value to.
-     */
-    private void drawPackClickable(Button drawPack, Button trashPack, Model game) {
-        drawPack.setOnAction((t) -> {
-            Card card = game.piocheCarte();
-            trashPack.setGraphic(findValue(card, trashPack));
-            drawPack.setGraphic(findValue(card, drawPack));
-        });
-    }
-
-    /**
-     * Creates a shape like card.
+     * Creates a grid of cards for player.
      *
      * @param game Model to get cards from.
      * @param col Position of col in grid pane.
      * @param row Position of row in grid pane.
      * @param gp Grid pane to add card to.
      */
-    private void createCardsForPlayers(Model game, GridPane gpLeft, GridPane gpRight) {
+    private void displayPlayerGridCards(Player [] players, GridPane gpLeft, GridPane gpRight) {
         for (int row = 1, col = 0, index = 0; row <= 3; col++, index++) {
             Button cardP1 = new Button();
             Button cardP2 = new Button();
             backFaceCard(cardP1);
             backFaceCard(cardP2);
-            if (game.getPlayers()[1].getPlayerCardAtIndex(index).isVisibiltiy()) {
-                cardP1.setGraphic(findValue(game.getPlayers()[1].getPlayerCardAtIndex(index), cardP1));
+            if (players[1].getPlayerCardAtIndex(index).isVisibiltiy()) {
+                cardP1.setGraphic(findValue(players[1].getPlayerCardAtIndex(index), cardP1));
             }
-            if (game.getPlayers()[2].getPlayerCardAtIndex(index).isVisibiltiy()) {
-                cardP2.setGraphic(findValue(game.getPlayers()[2].getPlayerCardAtIndex(index), cardP2));
+            if (players[2].getPlayerCardAtIndex(index).isVisibiltiy()) {
+                cardP2.setGraphic(findValue(players[2].getPlayerCardAtIndex(index), cardP2));
             }
-            //eventOfCard(game, cardP1, 1, index);
+            gridClickable(cardP2, 2, index, players);
+            gridClickable(cardP1, 1, index, players);
             gpLeft.add(cardP1, col, row);
-            //eventOfCard(game, cardP2, 2, index);
             gpRight.add(cardP2, col, row);
             if (col == 3) {
                 col = -1;
@@ -155,7 +159,28 @@ public class mainFx implements viewInterface{
             }
         }
     }
-
+    /**
+     * Makes the players grid of card clickable.
+     * 
+     * @param playerCard Player card to make clickable.
+     * @param player Player who the cards belong to.
+     * @param index Current index in the building of the grid.
+     */
+    public void gridClickable(Button playerCard, int player, int index, Player [] players){ 
+        playerCard.setOnAction((var t) -> {
+            if (player == controller.getPlayerTurn()){
+                if (controller.getDrawPack()){
+                    playerCard.setGraphic(drawButton.getGraphic());
+                    backFaceCard(drawButton);                    
+                //make card visible //Add checks for state of game.
+                } else if (controller.getTrashPack() && controller.getGameState() == gameState.ECHANGEdEFAUSSEgRILLE){
+                    playerCard.setGraphic(trashButton.getGraphic());
+                    trashButton.setGraphic(findValue(player == 1 ? controller.getCardAtIndex(index, 1)
+                    : controller.getCardAtIndex(index, 2), playerCard));//Gets value of player card.
+                } 
+                controller.unclickAll();
+            }});
+    }
     /**
      * Creates the back face of a card from a button to make it clickable.
      *
@@ -168,25 +193,15 @@ public class mainFx implements viewInterface{
         cartesIV.setFitWidth(75);
         btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         btn.setGraphic(cartesIV);
-        // btn.setStyle("-fx-pref-height: 75px;");
         btn.setStyle("-fx-background-color: transparent;");
     }
 
     /**
-     * Makes card clickable.
-     *
-     * @param game Value of cards.
-     * @param button Button which represents clickable card.
-     * @param player Player of card to flip.
-     * @param index Index of card to flip.
+     * Finds the graphic value of a card and applies it to a button.
+     * @param card Card to find graphic value of.
+     * @param button Button to add graphic value to.
+     * @return ImageView of card.
      */
-    private void eventOfCard(Model game, Button button, int player, int index) {
-        Card card = game.getPlayers()[player].getPlayerCardAtIndex(index);
-        button.setOnAction((t) -> {
-            button.setGraphic(findValue(card, button));
-        });
-    }
-
     private ImageView findValue(Card card, Button button) {
         if (card == null || button == null) {
             throw new IllegalArgumentException("Card can't be null");
@@ -250,8 +265,9 @@ public class mainFx implements viewInterface{
      * @param nb Number of player to display
      * @return TextField correctly formatted.
      */
-    private TextField playerTextField(int nb, Model game) {
-        TextField tf = new TextField("Joueur " + nb + " Points : " + game.getPlayerTot(nb));
+    private TextField updatePlayerTextField(int nb, int totOfPlayer) {
+        TextField tf = new TextField("Joueur " + nb + " Points : " 
+                + totOfPlayer);
         tf.setAlignment(Pos.CENTER);
         tf.setEditable(false);
         tf.setStyle("-fx-background-color: transparent;");
@@ -261,5 +277,8 @@ public class mainFx implements viewInterface{
     @Override
     public void update(Object arg) {
         Utils a = (Utils)arg;
+        displayPlayerGridCards(a.getPlayers(), gpL, gpR);
+        for (int i = 1; i<2 ; i++)
+            updatePlayerTextField(i, a.getPlayers()[i].getNbOFPointsVisCards());
     }
 }

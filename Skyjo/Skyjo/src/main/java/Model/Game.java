@@ -17,7 +17,11 @@ public class Game implements Model{
     private final Player[] players;
     private Player currentPlayer;
     private gameState status;
+    private boolean trashPackClicked;
+    private boolean drawPackClicked;
 
+    
+    
     /**
      * Default constructor for game.
      */
@@ -28,7 +32,7 @@ public class Game implements Model{
         this.players[1] = new Player();
         this.players[2] = new Player();
         Player currentPlayer = getFirstToPlay();
-        status = gameState.START;
+        status = gameState.DEBUT;
     }
 
     /**
@@ -174,4 +178,45 @@ public class Game implements Model{
        return players[2].equals(this.currentPlayer)
                 ? 2 : 1;
     }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public boolean isTrashPackClicked() {
+        return trashPackClicked;
+    }
+    
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public void setTrashPackClicked(boolean trashPackClicked) {
+        this.trashPackClicked = trashPackClicked;
+    }
+    
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public boolean isDrawPackClicked() {
+        return drawPackClicked;
+    }
+    
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public void setDrawPackClicked(boolean drawPackClicked) {
+        this.drawPackClicked = drawPackClicked;
+    }
+    
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public Deck getDeck(){
+        return this.deck;
+    }
+    
 }

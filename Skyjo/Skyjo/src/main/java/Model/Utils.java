@@ -1,12 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Model;
 
+import java.util.List;
+
 /**
- *
+ * Utilities given to update the observers.
+ * 
  * @author Gregory
  */
 public class Utils {
@@ -18,4 +16,23 @@ public class Utils {
         this.deck = deck;
         this.players = players;
     }
+
+    /**
+     * Gets the array of players in the game.
+     * @return An array of players.
+     */
+    public Player[] getPlayers() {
+        return players;
+    }
+    
+    /**
+     * Gets the deck of card that currently in the game.
+     * @return Deck of cards.
+     */
+    public Deck getDeck (){
+        return this.deck;
+    }
+    
+    
+    
 }

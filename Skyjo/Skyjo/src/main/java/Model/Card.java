@@ -52,7 +52,7 @@ public class Card {
      */
     @Override
     public String toString() {
-        return Integer.toString(getValue()) + isVisibiltiy();
+        return Integer.toString(getValue())+ " " + isVisibiltiy();
     }
 
 }
