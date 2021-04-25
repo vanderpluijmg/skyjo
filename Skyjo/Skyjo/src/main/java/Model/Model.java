@@ -117,4 +117,10 @@ public interface Model {
      * @return Deck of current game.
      */
     public Deck getDeck();
+    
+    /**
+     * Gets the current card of the deck.
+     * @return Card at the top of the deck.
+     */
+    public Card getCurrentCard();
 }

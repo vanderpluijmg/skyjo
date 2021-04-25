@@ -20,6 +20,7 @@ public class Game implements Model{
     private boolean trashPackClicked;
     private boolean drawPackClicked;
 
+
     
     
     /**
@@ -209,6 +210,14 @@ public class Game implements Model{
     @Override
     public void setDrawPackClicked(boolean drawPackClicked) {
         this.drawPackClicked = drawPackClicked;
+    }
+    
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public Card getCurrentCard(){
+        return this.deck.getCurCard();
     }
     
     /**

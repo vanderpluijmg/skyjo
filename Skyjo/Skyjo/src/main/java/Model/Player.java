@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Player {
 
-    private ArrayList<Card> playerCards;
+    private final ArrayList<Card> playerCards;
     private int nbOFPointsVisCards;
     private int nbOfVisCards;
 
@@ -49,10 +49,21 @@ public class Player {
     public void addPoints(Card card) {
         if (card.isVisibiltiy()) {
             this.nbOFPointsVisCards += card.getValue();
-            this.nbOfVisCards++;
         }
     }
 
+    /**
+     * Adds a new Card to the current deck of card of player
+     *
+     * @param card Card to add to deck of player.
+     */
+    public void addCard(Card card) {
+        if (card == null) {
+            throw new IllegalArgumentException("Card cannot be null");
+        }
+        this.playerCards.add(card);
+    }
+    
     /**
      * Getter for the list of cards from the player.
      *
@@ -71,17 +82,14 @@ public class Player {
     public Card getPlayerCardAtIndex(int index) {
         return this.playerCards.get(index);
     }
-
+    
     /**
-     * Adds a new Card to the current deck of card of player
-     *
-     * @param card Card to add to deck of player.
+     * Switches index of an old card with a new card.
+     * @param index Index to switch.
+     * @param card New card that will take place of the old one.
      */
-    public void addCard(Card card) {
-        if (card == null) {
-            throw new IllegalArgumentException("Card cannot be null");
-        }
-        this.playerCards.add(card);
+    public void switchIndex(int index ,Card card){
+        playerCards.set(index, card);
     }
 
     /**

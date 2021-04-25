@@ -5,6 +5,7 @@ import Model.Model;
 import Model.Player;
 import Model.gameState;
 import fxLayout.viewInterface;
+import java.util.Objects;
 
 /**
  * Controller for the game.
@@ -32,7 +33,12 @@ public class Controller {
     public void start() {
         startGame();
         game.addUtils();
-//        while (!over()) {
+//        System.out.println(game.getPlayingPlayer() + " "+1);
+//        for (int i= 0; i<2; i++){
+//            if (madeMove()) 
+                
+//        switchTurn();
+
 //            playMove(switchTurn());
 //            
 //        }
@@ -51,7 +57,7 @@ public class Controller {
      * @return True if the game is over.
      */
     public boolean over() {
-        return game.getPlayingPlayer() == 2 && allCardVis();
+        return true;//game.getPlayingPlayer() == 2 && allCardVis();
     }
     
     /**
@@ -79,13 +85,9 @@ public class Controller {
     
     /**
      * Plays a move of a player.
-     * @param player Player that will play move.
      */
-    public void playMove(Player player) {
-        if(true){
-        } else {
-            
-        }
+    public boolean madeMove() {
+        return game.isDrawPackClicked() || game.isTrashPackClicked();
     }
     
     /**
@@ -132,6 +134,14 @@ public class Controller {
     }
     
     /**
+     * Gets the current card of the deck.
+     * @return The card on top of the deck.
+     */
+    public Card getCurCard (){
+        return game.getCurrentCard();
+    }
+    
+    /**
      * Returns a players card at a specific index.
      * 
      * @param index Index to get card at.
@@ -148,6 +158,38 @@ public class Controller {
     public void unclickAll (){
         game.setDrawPackClicked(false);
         game.setTrashPackClicked(false);
+    }
+    
+    /**
+     * Adds the given card to the player
+     * @param player Player to add card to.
+     * @param card Card to get value of.
+     */
+    public void addPlayerPoints(int player, Card card){
+        Objects.requireNonNull(card);
+        Objects.requireNonNull(player);
+        game.getPlayers()[player].addPoints(card);
+    }
+    
+    /**
+     * Make the given card visible.
+     * @param index Index to get card at.
+     * @param player Player hand to get card.
+     */
+    public void makeCardAtIndexVisible(int index, int player){
+        game.getPlayers()[player].getPlayerCardAtIndex(index).hasVisibility(true);
+        addPlayerPoints(player, game.getPlayers()[player].getPlayerCardAtIndex(index));
+        System.out.println(game.getPlayers()[1].getNbOFPointsVisCards());
+    }
+    
+    /**
+     * Switches the new card with the old card to keep indexes of card up to date.
+     * @param newCard Card that will take place of the old.
+     * @param index Index that needs updating.
+     * @param player Player that the card belongs to.
+     */
+    public void switchCardIndex (Card newCard, int index, int player){
+        game.getPlayers()[player].switchIndex(index, newCard);
     }
     
     /**

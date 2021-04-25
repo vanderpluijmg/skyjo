@@ -11,6 +11,7 @@ import java.util.Collections;
 public class Deck {
 
     private final ArrayList<Card> deck;
+        private Card curCard;
 
     /**
      * Constructor of a deck of 150 card of game Skyjo.
@@ -68,6 +69,7 @@ public class Deck {
         if (show == true) {
             card.hasVisibility(true);
         }
+        this.curCard = card;
         return card;
     }
 
@@ -79,6 +81,14 @@ public class Deck {
     public boolean isEmpty() {
         return this.deck.isEmpty();
     }
+    
+    /**
+     * Gets the current card of the deck.
+     * @return Card at the top of the deck.
+     */
+    public Card getCurCard (){
+        return this.curCard;
+    } 
 
     /**
      * Prints the deck in the console.

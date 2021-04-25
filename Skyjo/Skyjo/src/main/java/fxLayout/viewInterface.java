@@ -17,6 +17,10 @@ public interface viewInterface {
      */
     public void start(Stage stage);
     
+    /**
+     * Updates the view with new information from model.
+     * @param arg Object used to update view.
+     */
     public void update(Object arg);
     
 }

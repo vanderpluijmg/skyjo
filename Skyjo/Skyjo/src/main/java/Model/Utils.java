@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.List;
-
 /**
  * Utilities given to update the observers.
  * 
@@ -10,7 +8,7 @@ import java.util.List;
 public class Utils {
     
     private final Deck deck;
-    private Player[] players;
+    private final Player[] players;
     
     public Utils (Deck deck, Player[] players){
         this.deck = deck;
