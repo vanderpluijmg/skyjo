@@ -60,7 +60,7 @@ public class Controller {
      */
     public boolean allCardVis(){
         for (int i = 1; i <= 2; i++) 
-             if (game.getPlayers()[i].getNbOfVisCards()==12) 
+             if (game.getPlayers()[i].getNbOfVisCards()==12) //Need to update visibilty of cards
                     return true;
         return false;
     }
@@ -69,7 +69,7 @@ public class Controller {
      * Puts the game in starting state.
      */
     public void startGame (){
-        if (!game.getStatus().equals(gameState.DEBUT))
+        if (!game.getStatus().equals(gameState.PRENDREUNECARTE))
             throw new IllegalArgumentException("The game is not in starting mode");
         game.shuffleDeck();
         game.distribInit();
@@ -78,7 +78,7 @@ public class Controller {
     }
     
     /**
-     * Plays a move of a player. //Play move and apply correct statuses of game.
+     * Plays a move of a player.
      * @param player Player that will play move.
      */
     public void playMove(Player player) {
@@ -165,4 +165,12 @@ public class Controller {
     public gameState getGameState(){
         return this.game.getStatus();
     }
+   
+    /**
+     * Gets the int of the current playing player.
+     * @return 1 if player 1 is playing.
+     */
+    public int getPlayerTurn (){
+       return game.getPlayingPlayer();
+   }
 }

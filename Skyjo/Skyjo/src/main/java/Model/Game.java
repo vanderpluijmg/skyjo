@@ -32,7 +32,7 @@ public class Game implements Model{
         this.players[1] = new Player();
         this.players[2] = new Player();
         Player currentPlayer = getFirstToPlay();
-        status = gameState.DEBUT;
+        status = gameState.PRENDREUNECARTE;
     }
 
     /**
