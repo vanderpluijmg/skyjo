@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Gregory
  */
-public class Game implements Model{
+public class Game implements Model {
 
     private final List<viewInterface> observers;
     private final Deck deck;
@@ -20,9 +20,6 @@ public class Game implements Model{
     private boolean trashPackClicked;
     private boolean drawPackClicked;
 
-
-    
-    
     /**
      * Default constructor for game.
      */
@@ -32,12 +29,11 @@ public class Game implements Model{
         this.players = new Player[3];
         this.players[1] = new Player();
         this.players[2] = new Player();
-        Player currentPlayer = getFirstToPlay();
         status = gameState.PRENDREUNECARTE;
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public gameState getStatus() {
@@ -45,10 +41,11 @@ public class Game implements Model{
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void setStatus(gameState status) {
+        Objects.requireNonNull(status);
         this.status = status;
     }
 
@@ -83,6 +80,7 @@ public class Game implements Model{
      * {@inheritDoc}
      */
     public void showCard(Card card) {
+        Objects.requireNonNull(card);
         card.hasVisibility(true);
     }
 
@@ -91,6 +89,7 @@ public class Game implements Model{
      */
     @Override
     public String getPlayerTot(int p) {
+        Objects.requireNonNull(p);
         return Integer.toString(players[p].getNbOFPointsVisCards());
     }
 
@@ -121,7 +120,6 @@ public class Game implements Model{
         deck.print();
     }
 
-    
     /**
      * Gets the player that is allowed to start the game.
      *
@@ -131,9 +129,9 @@ public class Game implements Model{
         return players[1].getNbOFPointsVisCards()
                 > players[2].getNbOFPointsVisCards() ? players[1] : players[2];
     }
-    
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public Player nextToPlay() {
@@ -146,7 +144,7 @@ public class Game implements Model{
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void registerObs(viewInterface obs) {
@@ -155,77 +153,102 @@ public class Game implements Model{
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void notifyObs(Object arg) {
         Objects.requireNonNull(arg);
-        observers.forEach(x -> {x.update(arg);});
+        observers.forEach(x -> {
+            x.update(arg);
+        });
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
-    public void addUtils() { 
-        notifyObs(new Utils(this.deck, this.players)); 
+    public void addUtils() {
+        notifyObs(new Utils(this.deck, this.players));
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
-    public int getPlayingPlayer() {
-       return players[2].equals(this.currentPlayer)
+    public int getCurrentPlayer() {
+        return players[2].equals(this.currentPlayer)
                 ? 2 : 1;
     }
 
+    @Override
+    public void setCurrentPlayer() {
+        this.currentPlayer = getFirstToPlay();
+    }
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public boolean isTrashPackClicked() {
         return trashPackClicked;
     }
-    
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void setTrashPackClicked(boolean trashPackClicked) {
+        Objects.requireNonNull(trashPackClicked);
         this.trashPackClicked = trashPackClicked;
     }
-    
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public boolean isDrawPackClicked() {
         return drawPackClicked;
     }
-    
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void setDrawPackClicked(boolean drawPackClicked) {
+        Objects.requireNonNull(drawPackClicked);
         this.drawPackClicked = drawPackClicked;
     }
-    
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
-    public Card getCurrentCard(){
+    public Card getCurrentCard() {
         return this.deck.getCurCard();
     }
-    
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
-    public Deck getDeck(){
+    public Card getTrashCard() {
+        return this.deck.getTrashCard();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Deck getDeck() {
         return this.deck;
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setTrashCard(Card card) {
+        Objects.requireNonNull(card);
+        this.deck.setTrashCard(card);
+    }
 }

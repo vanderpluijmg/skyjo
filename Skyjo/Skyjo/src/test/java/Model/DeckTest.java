@@ -15,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Gregory
  */
 public class DeckTest {
-    
+
     public DeckTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
@@ -93,5 +93,5 @@ public class DeckTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-    
+
 }

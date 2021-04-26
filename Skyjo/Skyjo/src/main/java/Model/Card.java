@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Objects;
+
 /**
  * Represents a card with a value and wether or not it is visible on game.
  *
@@ -16,6 +18,7 @@ public class Card {
      * @param value Value to give to card.
      */
     public Card(int value) {
+        Objects.requireNonNull(value);
         this.value = value;
         this.visible = false;
     }
@@ -35,6 +38,7 @@ public class Card {
      * @param vis Visibility to set.
      */
     public void hasVisibility(boolean vis) {
+        Objects.requireNonNull(vis);
         this.visible = vis;
     }
 
@@ -52,7 +56,7 @@ public class Card {
      */
     @Override
     public String toString() {
-        return Integer.toString(getValue())+ " " + isVisibiltiy();
+        return Integer.toString(getValue()) + " " + isVisibiltiy();
     }
 
 }

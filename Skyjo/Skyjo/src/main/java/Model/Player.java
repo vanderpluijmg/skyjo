@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a player. Each player has a hand of card and a number of points
@@ -26,6 +27,7 @@ public class Player {
 
     /**
      * Returns the number of visible cards.
+     *
      * @return Number of visible cards of player.
      */
     public int getNbOfVisCards() {
@@ -47,6 +49,7 @@ public class Player {
      * @param card Card to add to total.
      */
     public void addPoints(Card card) {
+        Objects.requireNonNull(card);
         if (card.isVisibiltiy()) {
             this.nbOFPointsVisCards += card.getValue();
         }
@@ -58,12 +61,10 @@ public class Player {
      * @param card Card to add to deck of player.
      */
     public void addCard(Card card) {
-        if (card == null) {
-            throw new IllegalArgumentException("Card cannot be null");
-        }
+        Objects.requireNonNull(card);
         this.playerCards.add(card);
     }
-    
+
     /**
      * Getter for the list of cards from the player.
      *
@@ -80,15 +81,19 @@ public class Player {
      * @return Card at index in player hand.
      */
     public Card getPlayerCardAtIndex(int index) {
+        Objects.requireNonNull(index);
         return this.playerCards.get(index);
     }
-    
+
     /**
      * Switches index of an old card with a new card.
+     *
      * @param index Index to switch.
      * @param card New card that will take place of the old one.
      */
-    public void switchIndex(int index ,Card card){
+    public void switchIndex(int index, Card card) {
+        Objects.requireNonNull(card);
+        Objects.requireNonNull(index);
         playerCards.set(index, card);
     }
 

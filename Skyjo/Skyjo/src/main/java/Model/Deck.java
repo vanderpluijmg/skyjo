@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Represents a collection of Card to create a "deck of card".
@@ -11,7 +12,8 @@ import java.util.Collections;
 public class Deck {
 
     private final ArrayList<Card> deck;
-        private Card curCard;
+    private Card curCard;
+    private Card trashCard;
 
     /**
      * Constructor of a deck of 150 card of game Skyjo.
@@ -65,6 +67,7 @@ public class Deck {
      * @return
      */
     public Card hitDeck(boolean show) {
+        Objects.requireNonNull(show);
         Card card = this.deck.remove(deck.size() - 1);
         if (show == true) {
             card.hasVisibility(true);
@@ -74,21 +77,41 @@ public class Deck {
     }
 
     /**
-     * Checks if deck is emtpy.
+     * Checks if deck is empty.
      *
-     * @return True if deck is emtpy.
+     * @return True if deck is empty.
      */
     public boolean isEmpty() {
         return this.deck.isEmpty();
     }
-    
+
     /**
      * Gets the current card of the deck.
+     *
      * @return Card at the top of the deck.
      */
-    public Card getCurCard (){
+    public Card getCurCard() {
         return this.curCard;
-    } 
+    }
+
+    /**
+     * Gets the current card that sits in the trash.
+     *
+     * @return Card at the top of the deck.
+     */
+    public Card getTrashCard() {
+        return this.trashCard;
+    }
+
+    /**
+     * Sets the trash card to a new card.
+     *
+     * @param card Card to set as new trash card.
+     */
+    public void setTrashCard(Card card) {
+        Objects.requireNonNull(card);
+        this.trashCard = card;
+    }
 
     /**
      * Prints the deck in the console.

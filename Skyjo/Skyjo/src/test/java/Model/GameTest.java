@@ -11,14 +11,14 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Gregory
  */
 public class GameTest {
-    
+
     public GameTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
@@ -195,14 +195,14 @@ public class GameTest {
     }
 
     /**
-     * Test of getPlayingPlayer method, of class Game.
+     * Test of getCurrentPlayer method, of class Game.
      */
     @Test
     public void testGetPlayingPlayer() {
         System.out.println("getPlayingPlayer");
         Game instance = new Game();
         int expResult = 0;
-        int result = instance.getPlayingPlayer();
+        int result = instance.getCurrentPlayer();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -275,5 +275,5 @@ public class GameTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-    
+
 }
