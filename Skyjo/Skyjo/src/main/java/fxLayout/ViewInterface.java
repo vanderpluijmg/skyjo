@@ -1,6 +1,7 @@
 package fxLayout;
 
 import Model.Model;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 /**
@@ -8,7 +9,7 @@ import javafx.stage.Stage;
  *
  * @author Gregory
  */
-public interface viewInterface {
+public interface ViewInterface {
 
     /**
      * Starts a new interface.
@@ -19,9 +20,15 @@ public interface viewInterface {
 
     /**
      * Updates the view with new information from model.
-     *
-     * @param arg Object used to update view.
      */
-    public void update(Object arg);
+    public void updateDrawDeck();
+    
+    public void updateCards(Button playerCard, int player, int index);
+    
+    public void updateInstructions();
+    
+    public void updateScoreAndPlayer(int player);
+    
+    public void updateTrashPack();
 
 }

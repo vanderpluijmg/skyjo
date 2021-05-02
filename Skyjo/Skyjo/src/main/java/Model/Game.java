@@ -1,9 +1,10 @@
 package Model;
 
-import fxLayout.viewInterface;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import fxLayout.ViewInterface;
+import javafx.scene.control.Button;
 
 /**
  * Represents all useful functions to play a game.
@@ -12,11 +13,11 @@ import java.util.Objects;
  */
 public class Game implements Model {
 
-    private final List<viewInterface> observers;
+    private final List<ViewInterface> observers;
     private final Deck deck;
     private final Player[] players;
     private Player currentPlayer;
-    private gameState status;
+    private GameState status;
     private boolean trashPackClicked;
     private boolean drawPackClicked;
 
@@ -29,14 +30,14 @@ public class Game implements Model {
         this.players = new Player[3];
         this.players[1] = new Player();
         this.players[2] = new Player();
-        status = gameState.PRENDREUNECARTE;
+        status = GameState.PRENDREUNECARTE;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public gameState getStatus() {
+    public GameState getStatus() {
         return status;
     }
 
@@ -44,9 +45,17 @@ public class Game implements Model {
      * {@inheritDoc}
      */
     @Override
-    public void setStatus(gameState status) {
+    public void setStatus(GameState status) {
         Objects.requireNonNull(status);
         this.status = status;
+        for (var x : observers)
+            x.updateInstructions();
+    }
+    
+    @Override
+    public void cardIsClicked(Button playerCard, int player, int index){
+        for (var x : observers)
+            x.updateCards(playerCard, player, index);
     }
 
     /**
@@ -55,6 +64,26 @@ public class Game implements Model {
     @Override
     public void shuffleDeck() {
         this.deck.shuffleDeck();
+    }
+    
+    @Override
+    public void updateDrawPack(){
+        for (var x : observers)
+            x.updateDrawDeck();
+    }
+    
+    @Override
+    public void updateTrashPack(){
+        for (var x : observers)
+            x.updateTrashPack();
+    }
+    
+    @Override
+    public void updatePlayerAndTot(int player){
+        players[player].updateTot();
+        for (var x : observers)
+            x.updateScoreAndPlayer(player);
+        System.out.println("end game");
     }
 
     /**
@@ -147,28 +176,9 @@ public class Game implements Model {
      * {@inheritDoc}
      */
     @Override
-    public void registerObs(viewInterface obs) {
+    public void registerObs(ViewInterface obs) {
         Objects.requireNonNull(obs);
         observers.add(obs);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyObs(Object arg) {
-        Objects.requireNonNull(arg);
-        observers.forEach(x -> {
-            x.update(arg);
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void addUtils() {
-        notifyObs(new Utils(this.deck, this.players));
     }
 
     /**

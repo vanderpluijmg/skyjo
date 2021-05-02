@@ -5,7 +5,7 @@ package Model;
  *
  * @author Gregory
  */
-public enum gameState {
+public enum GameState {
     PRENDREUNECARTE,
     GARDEROUDEFAUSSER,
     ECHANGEdEFAUSSEgRILLE,

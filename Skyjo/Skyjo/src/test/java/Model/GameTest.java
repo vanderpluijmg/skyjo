@@ -1,10 +1,10 @@
 package Model;
 
-import fxLayout.viewInterface;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import fxLayout.ViewInterface;
 
 /**
  *
@@ -30,8 +30,8 @@ public class GameTest {
     public void testGetStatus() {
         System.out.println("getStatus");
         Game instance = new Game();
-        gameState expResult = null;
-        gameState result = instance.getStatus();
+        GameState expResult = null;
+        GameState result = instance.getStatus();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -43,7 +43,7 @@ public class GameTest {
     @Test
     public void testSetStatus() {
         System.out.println("setStatus");
-        gameState status = null;
+        GameState status = null;
         Game instance = new Game();
         instance.setStatus(status);
         // TODO review the generated test code and remove the default call to fail.
@@ -162,34 +162,9 @@ public class GameTest {
     @Test
     public void testRegisterObs() {
         System.out.println("registerObs");
-        viewInterface obs = null;
+        ViewInterface obs = null;
         Game instance = new Game();
         instance.registerObs(obs);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of notifyObs method, of class Game.
-     */
-    @Test
-    public void testNotifyObs() {
-        System.out.println("notifyObs");
-        Object arg = null;
-        Game instance = new Game();
-        instance.notifyObs(arg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of addUtils method, of class Game.
-     */
-    @Test
-    public void testAddUtils() {
-        System.out.println("addUtils");
-        Game instance = new Game();
-        instance.addUtils();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

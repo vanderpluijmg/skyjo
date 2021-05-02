@@ -24,7 +24,7 @@ public class Player {
         this.nbOFPointsVisCards = 0;
         this.playerCards = new ArrayList();
     }
-
+    
     /**
      * Returns the number of visible cards.
      *
@@ -41,6 +41,12 @@ public class Player {
      */
     public int getNbOFPointsVisCards() {
         return this.nbOFPointsVisCards;
+    }
+    
+    public void updateTot(){
+        this.nbOFPointsVisCards = 0;
+        for (var x : playerCards)
+            addPoints(x);
     }
 
     /**

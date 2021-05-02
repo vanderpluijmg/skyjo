@@ -1,6 +1,8 @@
 package Main;
 
-import fxLayout.mainFx;
+import Controller.Controller;
+import Model.Game;
+import fxLayout.MainFx;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.stage.Stage;
@@ -26,7 +28,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-        mainFx mainFx = new mainFx();
-        mainFx.start(stage);
+        Controller controller = new Controller();
+        controller.start(stage);
     }
 }

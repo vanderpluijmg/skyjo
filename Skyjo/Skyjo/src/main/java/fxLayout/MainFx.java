@@ -1,11 +1,8 @@
 package fxLayout;
 
-import Controller.Controller;
 import Model.Card;
-import Model.Game;
-import Model.Player;
-import Model.Utils;
-import Model.gameState;
+import Model.Model;
+import Model.GameState;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,34 +21,36 @@ import javafx.stage.Stage;
  *
  * @author Gregory
  */
-public class mainFx implements viewInterface {
+public class MainFx implements ViewInterface {
 
     private Button drawButton;
     private Button trashButton;
-    private final Controller controller = new Controller(this, new Game());
+    private Model game;
     private final GridPane gpL = createPane(10, 5, 5);
     private final GridPane gpM = createPane(10, 5, 5);
     private final GridPane gpR = createPane(10, 5, 5);
     private final VBox vbox = new VBox();
+
+    public MainFx(Model model) {
+        this.game = model;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void start(Stage stage) {
-
-        controller.addObs();
-        controller.start();
+        game.registerObs(this);
         drawButton = createDrawPack();
         trashButton = createTrashPack();
 
+        updateBegin();
         //setup
         stage.setTitle("Skyoj");
 
         HBox hbox = new HBox();
 
         //Gridpane mid
-        gpM.add(formatTitles(""), 0, 0, 1, 1);
         gpM.add(formatTitles("Pioche"), 1, 1, 1, 1);
         gpM.add(formatTitles("Défausse"), 1, 3, 1, 1);
         gpM.add(drawButton, 1, 2);
@@ -90,10 +89,8 @@ public class mainFx implements viewInterface {
         button.setPrefWidth(65);
         backFaceCard(button);
         button.setOnAction((var t) -> {
-            if (!controller.getDrawPack()) {
-                button.setGraphic(findValue(controller.hitDeck(), button));
-                controller.clickDrawPack();
-                controller.changeGameState(gameState.GARDEROUDEFAUSSER);
+            if (!game.isDrawPackClicked()) {
+                game.updateDrawPack();
             }
         });
         return button;
@@ -105,23 +102,16 @@ public class mainFx implements viewInterface {
      * @return Formatted button.
      */
     private Button createTrashPack() {
-        controller.setTrashCard(controller.hitDeck());
-        System.out.println(controller.getTrashCard());
+        game.setTrashCard(game.getDeck().hitDeck(true));
         Button trashPack = new Button();
         trashPack.setPrefHeight(125);
         trashPack.setPrefWidth(65);
         trashPack.setStyle("-fx-background-color: transparent;");
-        trashPack.setGraphic(findValue(controller.getTrashCard(), trashPack));
+        trashPack.setGraphic(findValue(game.getTrashCard(), trashPack));
         trashPack.setOnAction((var t) -> {
-            if (!controller.getTrashPack()) {
-                controller.clickTrashPack();
-                controller.changeGameState(gameState.ECHANGEdEFAUSSEgRILLE);
-                if (controller.getDrawPack()) {
-                    trashButton.setGraphic(findValue(controller.getCurCard(), trashButton));
-                    controller.setTrashCard(controller.getCurCard());
-                    controller.changeGameState(gameState.SHOWCARD);
-                    backFaceCard(drawButton);
-                }
+            if (!game.isTrashPackClicked()) {
+                game.updateTrashPack();
+
             }
         });
         return trashPack;
@@ -129,23 +119,18 @@ public class mainFx implements viewInterface {
 
     /**
      * Creates a grid of cards for player.
-     *
-     * @param game Model to get cards from.
-     * @param col Position of col in grid pane.
-     * @param row Position of row in grid pane.
-     * @param gp Grid pane to add card to.
      */
-    private void displayPlayerGridCards(Player[] players) {
+    private void displayPlayerGridCards() {
         for (int row = 1, col = 0, index = 0; row <= 3; col++, index++) {
             Button cardP1 = new Button();
             Button cardP2 = new Button();
             backFaceCard(cardP1);
             backFaceCard(cardP2);
-            if (players[1].getPlayerCardAtIndex(index).isVisibiltiy()) {
-                cardP1.setGraphic(findValue(players[1].getPlayerCardAtIndex(index), cardP1));
+            if (game.getPlayers()[1].getPlayerCardAtIndex(index).isVisibiltiy()) {
+                cardP1.setGraphic(findValue(game.getPlayers()[1].getPlayerCardAtIndex(index), cardP1));
             }
-            if (players[2].getPlayerCardAtIndex(index).isVisibiltiy()) {
-                cardP2.setGraphic(findValue(players[2].getPlayerCardAtIndex(index), cardP2));
+            if (game.getPlayers()[2].getPlayerCardAtIndex(index).isVisibiltiy()) {
+                cardP2.setGraphic(findValue(game.getPlayers()[2].getPlayerCardAtIndex(index), cardP2));
             }
             gridClickable(cardP2, 2, index);
             gridClickable(cardP1, 1, index);
@@ -167,28 +152,31 @@ public class mainFx implements viewInterface {
      */
     private void gridClickable(Button playerCard, int player, int index) {
         playerCard.setOnAction((var t) -> {
-            if (player == controller.getPlayerTurn()) {
-                if (controller.getDrawPack() && controller.getGameState() == gameState.GARDEROUDEFAUSSER) {
-                    trashButton.setGraphic(findValue(controller.getCardAtIndex(index, player), trashButton));
-                    playerCard.setGraphic(findValue(controller.getCurCard(), playerCard));
-                    controller.switchCardIndex(controller.getCurCard(), index, player);
+            if (player == game.getCurrentPlayer()) {
+                if (game.isDrawPackClicked() && game.getStatus() == GameState.GARDEROUDEFAUSSER) {
+                    trashButton.setGraphic(findValue(game.getPlayers()[player].getPlayerCardAtIndex(index), trashButton));
+                    playerCard.setGraphic(findValue(game.getCurrentCard(), playerCard));
+                    game.getPlayers()[player].switchIndex(index, game.getCurrentCard());
                     backFaceCard(drawButton);
-                } else if (controller.getTrashPack() && controller.getGameState() == gameState.ECHANGEdEFAUSSEgRILLE) {
-                    Card playerCards = controller.getCardAtIndex(index, player);
+                } else if (game.isTrashPackClicked() && game.getStatus() == GameState.ECHANGEdEFAUSSEgRILLE) {
+                    Card playerCards = game.getPlayers()[player].getPlayerCardAtIndex(index);
                     trashButton.setGraphic(findValue(playerCards, trashButton));
-                    playerCard.setGraphic(findValue(controller.getTrashCard(), playerCard));
-                    controller.switchCardIndex(controller.getTrashCard(), index, player);
-                    controller.setTrashCard(playerCards);
-                    controller.getTrashCard().hasVisibility(true);
-                } else if (controller.getDrawPack() && controller.getTrashPack() && controller.getGameState() == gameState.SHOWCARD) {
-                    playerCard.setGraphic(findValue(controller.getCardAtIndex(index, player), playerCard));
+                    playerCard.setGraphic(findValue(game.getTrashCard(), playerCard));
+                    game.getPlayers()[player].switchIndex(index, game.getTrashCard());
+                    game.setTrashCard(playerCards);
+                    game.getTrashCard().hasVisibility(true);
+                } else if (game.isDrawPackClicked() && game.isTrashPackClicked() && game.getStatus() == GameState.SHOWCARD) {
+                    playerCard.setGraphic(findValue(game.getPlayers()[player].getPlayerCardAtIndex(index), playerCard));
                 }
-                controller.unclickAll();
-                controller.changeGameState(gameState.PRENDREUNECARTE);
+                game.setDrawPackClicked(false);
+                game.setTrashPackClicked(false);
+                game.setStatus(GameState.PRENDREUNECARTE);
+                game.updatePlayerAndTot(2);
             }
-
         });
     }
+
+    ;
 
     /**
      * Creates the back face of a card from a button to make it clickable.
@@ -276,9 +264,10 @@ public class mainFx implements viewInterface {
      * @param color Color of text field.
      * @param nb Number of player to display
      */
-    private void updatePlayerTextField(int nb, int totOfPlayer) {
-        TextField tf = new TextField("Joueur " + nb + " Points : "
-                + totOfPlayer);
+    private void updatePlayerTextField(int nb) {
+        TextField tf = new TextField();
+        tf.replaceText(0, tf.getText().length() ,"Joueur " + nb + " Points : "
+                + game.getPlayerTot(nb));
         tf.setAlignment(Pos.CENTER);
         tf.setEditable(false);
         tf.setStyle("-fx-background-color: transparent;");
@@ -287,26 +276,113 @@ public class mainFx implements viewInterface {
         } else {
             gpR.add(tf, 0, 0, 4, 1);
         }
+        gpM.add(formatTitles("It is "+ game.getCurrentPlayer() +"'s" +"turn "), 0, 0, 1, 1);
+        
+    }
+
+//    /**
+//     * Goes through all the cards to update them.
+//     */
+//    public void updateCardGrid(Button playerCard, int player, int index) {
+//            if (game.isDrawPackClicked() && game.getStatus() == GameState.GARDEROUDEFAUSSER) {
+//                    trashButton.setGraphic(findValue(game.getPlayers()[player].getPlayerCardAtIndex(index), trashButton));
+//                    playerCard.setGraphic(findValue(game.getCurrentCard(), playerCard));
+//                    game.getPlayers()[player].switchIndex(index, game.getCurrentCard());
+//                    backFaceCard(drawButton);
+//                } else if (game.isTrashPackClicked() && game.getStatus() == GameState.ECHANGEdEFAUSSEgRILLE) {
+//                    Card playerCards = game.getPlayers()[player].getPlayerCardAtIndex(index);
+//                    trashButton.setGraphic(findValue(playerCards, trashButton));
+//                    playerCard.setGraphic(findValue(game.getTrashCard(), playerCard));
+//                    game.getPlayers()[player].switchIndex(index, game.getTrashCard());
+//                    game.setTrashCard(playerCards);
+//                    game.getTrashCard().hasVisibility(true);
+//                } else if (game.isDrawPackClicked() && game.isTrashPackClicked() && game.getStatus() == GameState.SHOWCARD) {
+//                    playerCard.setGraphic(findValue(game.getPlayers()[player].getPlayerCardAtIndex(index), playerCard));
+//                }
+//                game.setDrawPackClicked(false);
+//                game.setTrashPackClicked(false);
+//                game.setStatus(GameState.PRENDREUNECARTE);
+//               
+//                
+//    }
+
+    /**
+     * Updates the given instruction to the player.
+     */
+    @Override
+    public void updateInstructions() {
+        TextField tf = new TextField();
+        tf.setText(" ");
+        tf.setAlignment(Pos.CENTER);
+        tf.setEditable(false);
+        tf.setStyle("-fx-background-color: transparent;");
+        switch (game.getStatus()) {
+            case ECHANGEdEFAUSSEgRILLE -> {
+                tf.setText("Echanger une de vos cartes avec celle de la défausse.");
+            }
+            case GARDEROUDEFAUSSER -> {
+                tf.setText("Veuillez cliquer sur une de vos cartes pour l'echanger ou défausser la carte.");
+
+            }
+            case PRENDREUNECARTE -> {
+                tf.setText("Prendre une carte sur la pile de défausse ou sur la pioche.");
+
+            }
+            case SHOWCARD -> {
+                tf.setText("Veuillez cliquez sur une de vos cartes pour la dévoilé.");
+
+            }
+        }
+        vbox.getChildren().add(tf);
     }
 
     /**
-     * {@inheritDoc }
+     * Updates the score of both players and the player that is currently playing.
+     * @param player
      */
     @Override
-    public void update(Object arg) {
-        Utils a = (Utils) arg;
-        displayPlayerGridCards(a.getPlayers());
-        for (int i = 1; i <= 2; i++) {
-            updatePlayerTextField(i, a.getPlayers()[i].getNbOFPointsVisCards());
+    public void updateScoreAndPlayer(int player) {
+        updatePlayerTextField(player);
+    }
+
+    /**
+     * Updates the draw deck.
+     */
+    @Override
+    public void updateDrawDeck() {
+        drawButton.setGraphic(findValue(game.getDeck().hitDeck(true), drawButton));
+        game.setDrawPackClicked(true);
+        game.setStatus(GameState.GARDEROUDEFAUSSER);
+        
+    }
+
+    /**
+     * Updates the trash pack.
+     */
+    @Override
+    public void updateTrashPack() {
+        game.setTrashPackClicked(true);
+        game.setStatus(GameState.ECHANGEdEFAUSSEgRILLE);
+        if (game.isDrawPackClicked() && game.isTrashPackClicked()) {
+            trashButton.setGraphic(findValue(game.getCurrentCard(), trashButton));
+            game.setTrashCard(game.getCurrentCard());
+            game.setStatus(GameState.SHOWCARD);
+            backFaceCard(drawButton);
         }
     }
 
-    /**
-     * Updates the users instructions
-     *
-     * @param nb Player that is currently playing.
-     */
-    private void updateIntstructions(int nb) {
-        vbox.getChildren().add(formatTitles("Player " + nb + " is allowed to start!"));
+    @Override
+    public void updateCards(Button playerCard, int player, int index) {
+//        updateCardGrid(playerCard, player, index);
+        
     }
+    
+    private void updateBegin(){
+        displayPlayerGridCards();
+        updateInstructions();
+        updatePlayerTextField(1);        
+        updatePlayerTextField(2);
+
+    }
+
 }

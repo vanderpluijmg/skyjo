@@ -1,6 +1,7 @@
 package Model;
 
-import fxLayout.viewInterface;
+import fxLayout.ViewInterface;
+import javafx.scene.control.Button;
 
 /**
  * Interface of a game.
@@ -16,6 +17,10 @@ public interface Model {
      */
     public Card piocheCarte();
 
+    public void updateDrawPack();
+    
+    public void updateTrashPack();
+    
     /**
      * Gets a player total values of shown cards
      *
@@ -51,19 +56,7 @@ public interface Model {
      *
      * @param obs Observer to add.
      */
-    public void registerObs(viewInterface obs);
-
-    /**
-     * Notifies all observers of new update.
-     *
-     * @param arg Update to notify.
-     */
-    public void notifyObs(Object arg);
-
-    /**
-     * Adds the necessary utils to obs update.
-     */
-    public void addUtils();
+    public void registerObs(ViewInterface obs);
 
     /**
      * Player that is suppose to play after current player.
@@ -84,14 +77,18 @@ public interface Model {
      *
      * @param status Game status to set.
      */
-    public void setStatus(gameState status);
+    public void setStatus(GameState status);
+    
+    public void cardIsClicked(Button card, int index, int player);
+    
+    public void updatePlayerAndTot(int player);
 
     /**
      * Gets the current game status.
      *
      * @return Current game status.
      */
-    public gameState getStatus();
+    public GameState getStatus();
 
     /**
      * Sets if the trash pack has been clicked or not.
