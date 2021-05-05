@@ -20,6 +20,7 @@ public class Game implements Model {
     private GameState status;
     private boolean trashPackClicked;
     private boolean drawPackClicked;
+    private int firstPlayer;
 
     /**
      * Default constructor for game.
@@ -48,14 +49,93 @@ public class Game implements Model {
     public void setStatus(GameState status) {
         Objects.requireNonNull(status);
         this.status = status;
-        for (var x : observers)
+        if (this.status == GameState.PRENDREUNECARTE) {
+            nextToPlay();
+        }
+        for (var x : observers) {
             x.updateInstructions();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void notifyEndOfTurn() {
+        if (!isOver()){
+            setDrawPackClicked(false);
+            setTrashPackClicked(false);
+            setStatus(GameState.PRENDREUNECARTE);
+        } else {
+            System.out.println(checkForWinner()); 
+            //Double score if player that has finished first if has bigger or equal score to last finishing player
+        }
     }
     
+    /**
+     * If game is over check for a winner.
+     * @return Player that has won the game.
+     */
+    private int checkForWinner(){
+        return players[1].getNbOFPointsVisCards() > players[2].getNbOFPointsVisCards() ? 2 : 1;
+    }
+    
+    /**
+     * Checks if the game is over.
+     *
+     * @return True if the game is over.
+     */
+    private boolean isOver() {
+        return allCardVis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void cardIsClicked(Button playerCard, int player, int index){
-        for (var x : observers)
+    public int getCurrentPlayer() {
+        return players[2].equals(this.currentPlayer)
+                ? 2 : 1;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void nextToPlay() {
+        if (getCurrentPlayer() == 2) {
+            this.currentPlayer = players[1];
+        } else {
+            this.currentPlayer = players[2];
+        }
+    }
+
+    /**
+     * Gets the player that is allowed to start the game.
+     *
+     * @return Player that need to play first.
+     */
+    private Player getFirstToPlay() {
+        return players[1].getNbOFPointsVisCards()
+                > players[2].getNbOFPointsVisCards() ? players[1] : players[2];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setCurrentPlayer() {
+        this.currentPlayer = getFirstToPlay();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cardIsClicked(Button playerCard, int player, int index) {
+        for (var x : observers) {
             x.updateCards(playerCard, player, index);
+        }
     }
 
     /**
@@ -65,25 +145,36 @@ public class Game implements Model {
     public void shuffleDeck() {
         this.deck.shuffleDeck();
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void updateDrawPack(){
-        for (var x : observers)
+    public void notifyDrawPack() {
+        for (var x : observers) {
             x.updateDrawDeck();
+        }
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void updateTrashPack(){
-        for (var x : observers)
+    public void notifyTrashPack() {
+        for (var x : observers) {
             x.updateTrashPack();
+        }
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void updatePlayerAndTot(int player){
+    public void notifyPlayerAndTot(int player) {
         players[player].updateTot();
-        for (var x : observers)
+        for (var x : observers) {
             x.updateScoreAndPlayer(player);
-        System.out.println("end game");
+        }
     }
 
     /**
@@ -106,9 +197,11 @@ public class Game implements Model {
     }
 
     /**
-     * {@inheritDoc}
+     * Show given card.
+     *
+     * @param card Card to show.
      */
-    public void showCard(Card card) {
+    private void showCard(Card card) {
         Objects.requireNonNull(card);
         card.hasVisibility(true);
     }
@@ -150,49 +243,12 @@ public class Game implements Model {
     }
 
     /**
-     * Gets the player that is allowed to start the game.
-     *
-     * @return Player that need to play first.
-     */
-    private Player getFirstToPlay() {
-        return players[1].getNbOFPointsVisCards()
-                > players[2].getNbOFPointsVisCards() ? players[1] : players[2];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Player nextToPlay() {
-        if (players[2].equals(this.currentPlayer)) {
-            this.currentPlayer = players[1];
-            return players[1];
-        }
-        this.currentPlayer = players[2];
-        return players[2];
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public void registerObs(ViewInterface obs) {
         Objects.requireNonNull(obs);
         observers.add(obs);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getCurrentPlayer() {
-        return players[2].equals(this.currentPlayer)
-                ? 2 : 1;
-    }
-
-    @Override
-    public void setCurrentPlayer() {
-        this.currentPlayer = getFirstToPlay();
     }
 
     /**
@@ -261,4 +317,22 @@ public class Game implements Model {
         Objects.requireNonNull(card);
         this.deck.setTrashCard(card);
     }
+
+    /**
+     * Checks if all cards for one player are all visible.
+     *
+     * @return True if at least one player has all his card visible.
+     */
+    private boolean allCardVis() {
+        boolean vis=false;
+        for (int i = 1; i <= 2; i++) {
+            if (getPlayers()[i].getNbOfVisCards() == 12) {
+                vis=true;
+            }
+            vis = false;
+        }
+        return vis;
+    }
+
+    
 }

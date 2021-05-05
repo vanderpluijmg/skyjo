@@ -25,7 +25,11 @@ public class MainFx implements ViewInterface {
 
     private Button drawButton;
     private Button trashButton;
-    private Model game;
+    private final Model game;
+    private final TextField textFieldInstructions = new TextField("");
+    private final TextField pointsRight = new TextField("");
+    private final TextField currentPlayer = new TextField("");
+    private final TextField pointsLeft = new TextField("");
     private final GridPane gpL = createPane(10, 5, 5);
     private final GridPane gpM = createPane(10, 5, 5);
     private final GridPane gpR = createPane(10, 5, 5);
@@ -55,14 +59,31 @@ public class MainFx implements ViewInterface {
         gpM.add(formatTitles("Défausse"), 1, 3, 1, 1);
         gpM.add(drawButton, 1, 2);
         gpM.add(trashButton, 1, 5);
+        gpM.add(formatChangeTitles(currentPlayer), 0, 6, 2, 2);
 
         //Adding of elements
-        vbox.getChildren().add(hbox);
+        vbox.getChildren().addAll(hbox, textFieldInstructions);
         hbox.getChildren().addAll(gpL, gpM, gpR);
-
+        gpR.add(formatChangeTitles(pointsRight), 0, 0, 4, 1);
+        gpL.add(formatChangeTitles(pointsLeft), 0, 0, 4, 1);
         Scene scene = new Scene(vbox, 930, 548);
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * Formats the text field that are updated during the game.
+     *
+     * @param tf Text field to format.
+     * @return Formatted text field.
+     */
+    private TextField formatChangeTitles(TextField tf) {
+        tf.setMaxWidth(Double.MAX_VALUE);
+        tf.setMaxHeight(Double.MAX_VALUE);
+        tf.setAlignment(Pos.CENTER);
+        tf.setEditable(false);
+        tf.setStyle("-fx-background-color: transparent;");
+        return tf;
     }
 
     /**
@@ -73,6 +94,8 @@ public class MainFx implements ViewInterface {
      */
     private TextField formatTitles(String string) {
         TextField tf = new TextField(string);
+        tf.setMaxWidth(Double.MAX_VALUE);
+        tf.setMaxHeight(Double.MAX_VALUE);
         tf.setAlignment(Pos.CENTER);
         tf.setEditable(false);
         tf.setStyle("-fx-background-color: transparent;");
@@ -90,7 +113,8 @@ public class MainFx implements ViewInterface {
         backFaceCard(button);
         button.setOnAction((var t) -> {
             if (!game.isDrawPackClicked()) {
-                game.updateDrawPack();
+                game.notifyDrawPack();
+                //C3C5D3 ::> notifyLateralMove
             }
         });
         return button;
@@ -110,7 +134,7 @@ public class MainFx implements ViewInterface {
         trashPack.setGraphic(findValue(game.getTrashCard(), trashPack));
         trashPack.setOnAction((var t) -> {
             if (!game.isTrashPackClicked()) {
-                game.updateTrashPack();
+                game.notifyTrashPack();
 
             }
         });
@@ -166,12 +190,13 @@ public class MainFx implements ViewInterface {
                     game.setTrashCard(playerCards);
                     game.getTrashCard().hasVisibility(true);
                 } else if (game.isDrawPackClicked() && game.isTrashPackClicked() && game.getStatus() == GameState.SHOWCARD) {
+                    //If card is already visible what to do?
                     playerCard.setGraphic(findValue(game.getPlayers()[player].getPlayerCardAtIndex(index), playerCard));
                 }
-                game.setDrawPackClicked(false);
-                game.setTrashPackClicked(false);
-                game.setStatus(GameState.PRENDREUNECARTE);
-                game.updatePlayerAndTot(2);
+                System.out.println(game.getPlayers()[player].getNbOfVisCards());
+                game.notifyEndOfTurn();
+                game.notifyPlayerAndTot(player);
+                        
             }
         });
     }
@@ -265,19 +290,13 @@ public class MainFx implements ViewInterface {
      * @param nb Number of player to display
      */
     private void updatePlayerTextField(int nb) {
-        TextField tf = new TextField();
-        tf.replaceText(0, tf.getText().length() ,"Joueur " + nb + " Points : "
-                + game.getPlayerTot(nb));
-        tf.setAlignment(Pos.CENTER);
-        tf.setEditable(false);
-        tf.setStyle("-fx-background-color: transparent;");
         if (nb == 1) {
-            gpL.add(tf, 0, 0, 4, 1);
-        } else {
-            gpR.add(tf, 0, 0, 4, 1);
+            pointsLeft.setText("Joueur " + nb + " Points : "
+                    + game.getPlayerTot(nb));
         }
-        gpM.add(formatTitles("It is "+ game.getCurrentPlayer() +"'s" +"turn "), 0, 0, 1, 1);
-        
+        pointsRight.setText("Joueur " + nb + " Points : "
+                + game.getPlayerTot(nb));
+        currentPlayer.setText("It is player " + game.getCurrentPlayer() + "'s turn");
     }
 
 //    /**
@@ -305,40 +324,35 @@ public class MainFx implements ViewInterface {
 //               
 //                
 //    }
-
     /**
-     * Updates the given instruction to the player.
+     * {@inheritDoc}
      */
     @Override
-    public void updateInstructions() {
-        TextField tf = new TextField();
-        tf.setText(" ");
-        tf.setAlignment(Pos.CENTER);
-        tf.setEditable(false);
-        tf.setStyle("-fx-background-color: transparent;");
+    public void updateInstructions() { //Make tf att
+        textFieldInstructions.setAlignment(Pos.CENTER);
+        textFieldInstructions.setEditable(false);
+        textFieldInstructions.setStyle("-fx-background-color: transparent;");
         switch (game.getStatus()) {
             case ECHANGEdEFAUSSEgRILLE -> {
-                tf.setText("Echanger une de vos cartes avec celle de la défausse.");
+                textFieldInstructions.setText("Echanger une de vos cartes avec celle de la défausse.");
             }
             case GARDEROUDEFAUSSER -> {
-                tf.setText("Veuillez cliquer sur une de vos cartes pour l'echanger ou défausser la carte.");
+                textFieldInstructions.setText("Veuillez cliquer sur une de vos cartes pour l'echanger ou défausser la carte.");
 
             }
             case PRENDREUNECARTE -> {
-                tf.setText("Prendre une carte sur la pile de défausse ou sur la pioche.");
+                textFieldInstructions.setText("Prendre une carte sur la pile de défausse ou sur la pioche.");
 
             }
             case SHOWCARD -> {
-                tf.setText("Veuillez cliquez sur une de vos cartes pour la dévoilé.");
+                textFieldInstructions.setText("Veuillez cliquez sur une de vos cartes pour la dévoilé.");
 
             }
         }
-        vbox.getChildren().add(tf);
     }
 
     /**
-     * Updates the score of both players and the player that is currently playing.
-     * @param player
+     * {@inheritDoc}
      */
     @Override
     public void updateScoreAndPlayer(int player) {
@@ -346,18 +360,17 @@ public class MainFx implements ViewInterface {
     }
 
     /**
-     * Updates the draw deck.
+     * {@inheritDoc}
      */
     @Override
     public void updateDrawDeck() {
         drawButton.setGraphic(findValue(game.getDeck().hitDeck(true), drawButton));
         game.setDrawPackClicked(true);
         game.setStatus(GameState.GARDEROUDEFAUSSER);
-        
     }
 
     /**
-     * Updates the trash pack.
+     * {@inheritDoc}
      */
     @Override
     public void updateTrashPack() {
@@ -371,18 +384,23 @@ public class MainFx implements ViewInterface {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateCards(Button playerCard, int player, int index) {
 //        updateCardGrid(playerCard, player, index);
-        
+
     }
-    
-    private void updateBegin(){
+
+    /**
+     * Updates that only take place once in the beginning.
+     */
+    private void updateBegin() {
         displayPlayerGridCards();
         updateInstructions();
-        updatePlayerTextField(1);        
+        updatePlayerTextField(1);
         updatePlayerTextField(2);
-
     }
 
 }

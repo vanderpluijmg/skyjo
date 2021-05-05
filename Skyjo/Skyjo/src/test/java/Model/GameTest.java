@@ -98,7 +98,7 @@ public class GameTest {
         System.out.println("showCard");
         Card card = null;
         Game instance = new Game();
-        instance.showCard(card);
+        //instance.showCard(card);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -145,16 +145,16 @@ public class GameTest {
     /**
      * Test of nextToPlay method, of class Game.
      */
-    @Test
-    public void testNextToPlay() {
-        System.out.println("nextToPlay");
-        Game instance = new Game();
-        Player expResult = null;
-        Player result = instance.nextToPlay();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testNextToPlay() {
+//        System.out.println("nextToPlay");
+//        Game instance = new Game();
+//        Player expResult = null;
+//        int result = instance.nextToPlay();
+//        assertEquals(expResult, result);
+//         TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of registerObs method, of class Game.

@@ -17,10 +17,16 @@ public interface Model {
      */
     public Card piocheCarte();
 
-    public void updateDrawPack();
-    
-    public void updateTrashPack();
-    
+    /**
+     * Notifies the draw pack to update itself.
+     */
+    public void notifyDrawPack();
+
+    /**
+     * Notifies the trash pack to update itself.
+     */
+    public void notifyTrashPack();
+
     /**
      * Gets a player total values of shown cards
      *
@@ -61,9 +67,13 @@ public interface Model {
     /**
      * Player that is suppose to play after current player.
      *
-     * @return Next player to play.
      */
-    public Player nextToPlay();
+    public void nextToPlay();
+
+    /**
+     * Notifies the end of a turn.
+     */
+    public void notifyEndOfTurn();
 
     /**
      * Gets the player that is currently playing.
@@ -78,10 +88,22 @@ public interface Model {
      * @param status Game status to set.
      */
     public void setStatus(GameState status);
-    
+
+    /**
+     * Notifies that a player has clicked a card.
+     *
+     * @param card Card that he has clicked.
+     * @param index Index of specific card.
+     * @param player Player that has clicked the card.
+     */
     public void cardIsClicked(Button card, int index, int player);
-    
-    public void updatePlayerAndTot(int player);
+
+    /**
+     * Notifies player and total of player to update.
+     *
+     * @param player Player to update.
+     */
+    public void notifyPlayerAndTot(int player);
 
     /**
      * Gets the current game status.

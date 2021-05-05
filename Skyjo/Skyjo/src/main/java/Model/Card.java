@@ -7,7 +7,7 @@ import java.util.Objects;
  *
  * @author Gregory
  */
-public class Card {
+public final class Card {
 
     private final int value;
     private boolean visible;
