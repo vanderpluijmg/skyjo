@@ -20,7 +20,7 @@ public class Player {
      * Default constructor of Player
      */
     public Player() {
-        this.nbOfVisCards = 1;
+        this.nbOfVisCards = 0;
         this.nbOFPointsVisCards = 0;
         this.playerCards = new ArrayList();
     }
@@ -34,6 +34,12 @@ public class Player {
         return nbOfVisCards;
     }
 
+    public void setNbOFPointsVisCards(int nbOFPointsVisCards) {
+        this.nbOFPointsVisCards = nbOFPointsVisCards;
+    }
+    
+    
+
     /**
      * Getter for number of points of player.
      *
@@ -45,7 +51,7 @@ public class Player {
     
     public void updateTot(){
         this.nbOFPointsVisCards = 0;
-        this.nbOfVisCards = 1;
+        this.nbOfVisCards = 0;
         for (var x : playerCards){
             addPoints(x);
         }

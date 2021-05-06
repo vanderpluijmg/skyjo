@@ -34,6 +34,12 @@ public interface Model {
      * @return Total of player in String format.
      */
     public String getPlayerTot(int p);
+    
+    /**
+     * Checks for the winner.
+     * @return Winner in int format.
+     */
+    public int checkForWinner();
 
     /**
      * Distributes the first 12 card to each player.

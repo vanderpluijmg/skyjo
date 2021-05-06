@@ -26,18 +26,6 @@ public class PlayerTest {
     }
 
     /**
-     * Test of getNbOFPointsVisCards method, of class Player.
-     */
-    @Test
-    public void testGetNbOFPointsVisCards() {
-        System.out.println("getNbOFPointsVisCards");
-        Player instance = new Player();
-        int expResult = 0;
-        int result = instance.getNbOFPointsVisCards();
-        assertEquals(expResult, result);
-        }
-
-    /**
      * Test of addPoints method, of class Player.
      */
     @Test
@@ -52,30 +40,15 @@ public class PlayerTest {
     }
 
     /**
-     * Test of getPlayerCard method, of class Player.
-     */
-    @Test
-    public void testGetPlayerCard() {
-        System.out.println("getPlayerCard");
-        Player instance = new Player();
-        List<Card> expResult = null;
-        List<Card> result = instance.getPlayerCard();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of addCard method, of class Player.
      */
     @Test
     public void testAddCard() {
         System.out.println("addCard");
-        Card card = null;
+        Card card = new Card(7);
         Player instance = new Player();
         instance.addCard(card);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(card.getValue(), instance.getPlayerCardAtIndex(0).getValue());
     }
 
 }

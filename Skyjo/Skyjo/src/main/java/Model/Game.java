@@ -20,7 +20,7 @@ public class Game implements Model {
     private GameState status;
     private boolean trashPackClicked;
     private boolean drawPackClicked;
-    private int firstPlayer;
+    private Player otherPlayer;
 
     /**
      * Default constructor for game.
@@ -52,9 +52,9 @@ public class Game implements Model {
         if (this.status == GameState.PRENDREUNECARTE) {
             nextToPlay();
         }
-        for (var x : observers) {
+        observers.forEach(x -> {
             x.updateInstructions();
-        }
+        });
     }
 
     /**
@@ -62,31 +62,28 @@ public class Game implements Model {
      */
     @Override
     public void notifyEndOfTurn() {
-        if (!isOver()){
+        if (!allCardVis()) {
             setDrawPackClicked(false);
             setTrashPackClicked(false);
             setStatus(GameState.PRENDREUNECARTE);
         } else {
-            System.out.println(checkForWinner()); 
-            //Double score if player that has finished first if has bigger or equal score to last finishing player
+            if (currentPlayer.getNbOFPointsVisCards() >= otherPlayer.getNbOFPointsVisCards()) {
+                currentPlayer.setNbOFPointsVisCards(currentPlayer.getNbOFPointsVisCards() * 2);
+            }
+            observers.forEach(x -> {
+                x.endOfGame();
+            });
         }
     }
-    
+
     /**
      * If game is over check for a winner.
+     *
      * @return Player that has won the game.
      */
-    private int checkForWinner(){
+    @Override
+    public int checkForWinner() {
         return players[1].getNbOFPointsVisCards() > players[2].getNbOFPointsVisCards() ? 2 : 1;
-    }
-    
-    /**
-     * Checks if the game is over.
-     *
-     * @return True if the game is over.
-     */
-    private boolean isOver() {
-        return allCardVis();
     }
 
     /**
@@ -104,8 +101,11 @@ public class Game implements Model {
     @Override
     public void nextToPlay() {
         if (getCurrentPlayer() == 2) {
+            this.otherPlayer = currentPlayer;
             this.currentPlayer = players[1];
         } else {
+
+            this.otherPlayer = currentPlayer;
             this.currentPlayer = players[2];
         }
     }
@@ -133,9 +133,9 @@ public class Game implements Model {
      */
     @Override
     public void cardIsClicked(Button playerCard, int player, int index) {
-        for (var x : observers) {
+        observers.forEach(x -> {
             x.updateCards(playerCard, player, index);
-        }
+        });
     }
 
     /**
@@ -151,9 +151,9 @@ public class Game implements Model {
      */
     @Override
     public void notifyDrawPack() {
-        for (var x : observers) {
+        observers.forEach(x -> {
             x.updateDrawDeck();
-        }
+        });
     }
 
     /**
@@ -161,9 +161,9 @@ public class Game implements Model {
      */
     @Override
     public void notifyTrashPack() {
-        for (var x : observers) {
+        observers.forEach(x -> {
             x.updateTrashPack();
-        }
+        });
     }
 
     /**
@@ -171,10 +171,9 @@ public class Game implements Model {
      */
     @Override
     public void notifyPlayerAndTot(int player) {
-        players[player].updateTot();
-        for (var x : observers) {
+        observers.forEach(x -> {
             x.updateScoreAndPlayer(player);
-        }
+        });
     }
 
     /**
@@ -194,16 +193,6 @@ public class Game implements Model {
             throw new IllegalArgumentException("Deck is emtpy");
         }
         return this.deck.hitDeck(true);
-    }
-
-    /**
-     * Show given card.
-     *
-     * @param card Card to show.
-     */
-    private void showCard(Card card) {
-        Objects.requireNonNull(card);
-        card.hasVisibility(true);
     }
 
     /**
@@ -324,15 +313,12 @@ public class Game implements Model {
      * @return True if at least one player has all his card visible.
      */
     private boolean allCardVis() {
-        boolean vis=false;
+        boolean vis = false;
         for (int i = 1; i <= 2; i++) {
             if (getPlayers()[i].getNbOfVisCards() == 12) {
-                vis=true;
+                vis = true;
             }
-            vis = false;
         }
         return vis;
     }
-
-    
 }

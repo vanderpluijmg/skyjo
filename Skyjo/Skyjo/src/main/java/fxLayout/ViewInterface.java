@@ -48,4 +48,8 @@ public interface ViewInterface {
      */
     public void updateTrashPack();
 
+    /**
+     * Display the end of the game popup.
+     */
+    public void endOfGame();
 }
