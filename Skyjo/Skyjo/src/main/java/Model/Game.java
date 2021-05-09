@@ -7,7 +7,7 @@ import fxLayout.ViewInterface;
 import javafx.scene.control.Button;
 
 /**
- * Represents all useful functions to play a game.
+ * Represents all useful functions needed to play a game.
  *
  * @author Gregory
  */
@@ -111,16 +111,6 @@ public class Game implements Model {
     }
 
     /**
-     * Gets the player that is allowed to start the game.
-     *
-     * @return Player that need to play first.
-     */
-    private Player getFirstToPlay() {
-        return players[1].getNbOFPointsVisCards()
-                > players[2].getNbOFPointsVisCards() ? players[1] : players[2];
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -171,6 +161,7 @@ public class Game implements Model {
      */
     @Override
     public void notifyPlayerAndTot(int player) {
+        players[player].updateTot();
         observers.forEach(x -> {
             x.updateScoreAndPlayer(player);
         });
@@ -320,5 +311,15 @@ public class Game implements Model {
             }
         }
         return vis;
+    }
+
+    /**
+     * Gets the player that is allowed to start the game.
+     *
+     * @return Player that need to play first.
+     */
+    private Player getFirstToPlay() {
+        return players[1].getNbOFPointsVisCards()
+                > players[2].getNbOFPointsVisCards() ? players[1] : players[2];
     }
 }

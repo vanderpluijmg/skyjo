@@ -44,13 +44,12 @@ public class MainFx implements ViewInterface {
      * {@inheritDoc}
      */
     @Override
-    public void start(Stage stage) {
-        beginInstructions(); //Instruction of the game for player to read in the begining.
+    public void start(Stage primaryStage) {
         game.registerObs(this);
         drawButton = createDrawPack();
         trashButton = createTrashPack();
         updateBegin();
-        stage.setTitle("Skyoj");
+        primaryStage.setTitle("Skyoj");
         HBox hbox = new HBox();
         gpM.add(formatTitles("Pioche"), 1, 1, 1, 1);
         gpM.add(formatTitles("Défausse"), 1, 3, 1, 1);
@@ -61,9 +60,8 @@ public class MainFx implements ViewInterface {
         hbox.getChildren().addAll(gpL, gpM, gpR);
         gpR.add(formatChangeTitles(pointsRight), 0, 0, 4, 1);
         gpL.add(formatChangeTitles(pointsLeft), 0, 0, 4, 1);
-        Scene scene = new Scene(vbox, 930, 548);
-        stage.setScene(scene);
-        stage.show();
+        primaryStage.setScene(new Scene(vbox, 930, 548));
+        primaryStage.show();
     }
 
     /**
@@ -176,13 +174,14 @@ public class MainFx implements ViewInterface {
             }
         });
     }
-    
+
     /**
      * Send of pop up with a message and a title.
+     *
      * @param message Message to display in popup.
      * @param title Title to display in popup.
      */
-    private void popUp (String message, String title){
+    private void popUp(String message, String title) {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -268,6 +267,7 @@ public class MainFx implements ViewInterface {
 
     /**
      * Goes through all the cards to update them.
+     *
      * @param playerCard
      * @param player
      * @param index
@@ -288,9 +288,10 @@ public class MainFx implements ViewInterface {
         } else if (game.isDrawPackClicked() && game.isTrashPackClicked() && game.getStatus() == GameState.SHOWCARD) {
             if (game.getPlayers()[player].getPlayerCardAtIndex(index).isVisibiltiy() == true) {
                 playerCard.setDisable(true);
-                popUp("This card is already visible", "Non valid move"); //How to wait for the player to get to make a good move and wait.
+                popUp("This card is already visible", "Non valid move");
+            } else {
+                game.getPlayers()[player].getPlayerCardAtIndex(index).hasVisibility(true);
             }
-            else game.getPlayers()[player].getPlayerCardAtIndex(index).hasVisibility(true);
             playerCard.setGraphic(findValue(game.getPlayers()[player].getPlayerCardAtIndex(index), playerCard));
 
         }
@@ -298,7 +299,7 @@ public class MainFx implements ViewInterface {
         game.notifyEndOfTurn();
         game.notifyPlayerAndTot(player);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -309,22 +310,18 @@ public class MainFx implements ViewInterface {
         textFieldInstructions.setStyle("-fx-background-color: transparent;");
         switch (game.getStatus()) {
             case ECHANGEdEFAUSSEgRILLE -> {
-                textFieldInstructions.setText
-        ("Echanger une de vos cartes avec celle de la défausse.");
+                textFieldInstructions.setText("Echanger une de vos cartes avec celle de la défausse.");
             }
             case GARDEROUDEFAUSSER -> {
-                textFieldInstructions.setText
-        ("Veuillez cliquer sur une de vos cartes pour l'echanger ou défausser la carte.");
+                textFieldInstructions.setText("Veuillez cliquer sur une de vos cartes pour l'echanger ou défausser la carte.");
 
             }
             case PRENDREUNECARTE -> {
-                textFieldInstructions.setText
-        ("Prendre une carte sur la pile de défausse ou sur la pioche.");
+                textFieldInstructions.setText("Prendre une carte sur la pile de défausse ou sur la pioche.");
 
             }
             case SHOWCARD -> {
-                textFieldInstructions.setText
-        ("Veuillez cliquez sur une de vos cartes pour la dévoilé.");
+                textFieldInstructions.setText("Veuillez cliquez sur une de vos cartes pour la dévoilé.");
 
             }
         }
@@ -338,9 +335,10 @@ public class MainFx implements ViewInterface {
         if (nb == 1) {
             pointsLeft.setText("Joueur " + nb + " Points : "
                     + game.getPlayerTot(nb));
+        } else {
+            pointsRight.setText("Joueur " + nb + " Points : "
+                    + game.getPlayerTot(nb));
         }
-        else pointsRight.setText("Joueur " + nb + " Points : "
-                + game.getPlayerTot(nb));
         currentPlayer.setText("It is player " + game.getCurrentPlayer()
                 + "'s turn");
     }
@@ -350,7 +348,7 @@ public class MainFx implements ViewInterface {
      */
     @Override
     public void updateDrawDeck() {
-        drawButton.setGraphic(findValue(game.getDeck().hitDeck(true), 
+        drawButton.setGraphic(findValue(game.getDeck().hitDeck(true),
                 drawButton));
         game.setDrawPackClicked(true);
         game.setStatus(GameState.GARDEROUDEFAUSSER);
@@ -364,7 +362,7 @@ public class MainFx implements ViewInterface {
         game.setTrashPackClicked(true);
         game.setStatus(GameState.ECHANGEdEFAUSSEgRILLE);
         if (game.isDrawPackClicked() && game.isTrashPackClicked()) {
-            trashButton.setGraphic(findValue(game.getCurrentCard(), 
+            trashButton.setGraphic(findValue(game.getCurrentCard(),
                     trashButton));
             game.setTrashCard(game.getCurrentCard());
             game.setStatus(GameState.SHOWCARD);
@@ -390,18 +388,12 @@ public class MainFx implements ViewInterface {
         updateScoreAndPlayer(2);
 
     }
-    /**
-     * Displays the instructions of the game.
-     */
-    public void beginInstructions(){
-        
-    }
-            
+
     /**
      * @{inheritDoc}
      */
     @Override
-    public void endOfGame (){
+    public void endOfGame() {
         popUp("Thank you for playing until the end of the game, the winner is player " + game.checkForWinner(), "Game finished!");
         System.exit(0);
     }

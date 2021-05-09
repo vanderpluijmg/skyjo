@@ -28,6 +28,7 @@ public class Controller {
 
     /**
      * Starts the whole process of a new game.
+     *
      * @param stage Stage to display.
      */
     public void startView(Stage stage) {

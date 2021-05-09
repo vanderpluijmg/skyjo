@@ -24,7 +24,7 @@ public class Player {
         this.nbOFPointsVisCards = 0;
         this.playerCards = new ArrayList();
     }
-    
+
     /**
      * Returns the number of visible cards.
      *
@@ -37,8 +37,6 @@ public class Player {
     public void setNbOFPointsVisCards(int nbOFPointsVisCards) {
         this.nbOFPointsVisCards = nbOFPointsVisCards;
     }
-    
-    
 
     /**
      * Getter for number of points of player.
@@ -48,13 +46,16 @@ public class Player {
     public int getNbOFPointsVisCards() {
         return this.nbOFPointsVisCards;
     }
-    
-    public void updateTot(){
+
+    /**
+     * Updates player total number of visible cards and points of visible cards.
+     */
+    public void updateTot() {
         this.nbOFPointsVisCards = 0;
         this.nbOfVisCards = 0;
-        for (var x : playerCards){
+        playerCards.forEach(x -> {
             addPoints(x);
-        }
+        });
     }
 
     /**
@@ -125,15 +126,6 @@ public class Player {
         addPoints(playerCards.get(first));
         playerCards.get(second).hasVisibility(true);
         addPoints(playerCards.get(second));
-    }
-
-    /**
-     * Prints the hand of current player in console.
-     */
-    public void printHand() {
-        playerCards.forEach((t) -> {
-            System.out.println(t);
-        });
     }
 
 }

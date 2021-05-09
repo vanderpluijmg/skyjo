@@ -12,7 +12,7 @@ public class CardTest {
     public CardTest() {
     }
 
-    /**
+    /**b
      * Test of getValue method, of class Card.
      */
     @Test

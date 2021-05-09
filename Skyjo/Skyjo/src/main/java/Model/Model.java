@@ -4,7 +4,7 @@ import fxLayout.ViewInterface;
 import javafx.scene.control.Button;
 
 /**
- * Interface of a game.
+ * Interface of class game.
  *
  * @author Gregory
  */
@@ -34,9 +34,10 @@ public interface Model {
      * @return Total of player in String format.
      */
     public String getPlayerTot(int p);
-    
+
     /**
      * Checks for the winner.
+     *
      * @return Winner in int format.
      */
     public int checkForWinner();

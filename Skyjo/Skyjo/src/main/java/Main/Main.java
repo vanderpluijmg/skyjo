@@ -1,8 +1,6 @@
 package Main;
 
 import Controller.Controller;
-import Model.Game;
-import fxLayout.MainFx;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.stage.Stage;
